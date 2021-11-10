@@ -31,33 +31,34 @@ public struct PurchaseConfiguration {
     let purchaseFailedText: String
     let tryAgainButtonText: String
 
-    let succesLabelText: String
+    let successLabelText: String
     let successButtonText: String
     
     let successAction: (() -> Void)?
     let secondaryButtonAction: (() -> Void)?
     let isSecondaryButtonHidden: Bool
     
-    /// FIXME: do we need it?
-    let associatedPurchaseItemId: String?
+    /// a custom ID to log the successful purchase
+    /// if nil, product identifier will be userd
+    let purchaseIdForHistory: String?
     
     public init(
         id: String,
         purchaseProductIdentifiers: [ProductIdentifier],
-        headerTitle: String = "Support",
-        salesLabelText: String =  "SalesPitch",
-        purchaseFailedText: String =  "PurchaseFailed",
+        headerTitle: String = "Donate",
+        salesLabelText: String =  "Your support makes apps better!",
+        purchaseFailedText: String =  "Purchase failed, please try again",
         salesLabelFont: UIFont = UIFont.systemFont(ofSize: 17),
-        tryAgainButtonText: String =  "TryAgain",
+        tryAgainButtonText: String =  "Try again",
         salesLabelColor: UIColor = UIColor.darkText,
         purchaseButtonText: String =  "Donate",
         secondaryButtonText: String = "Continue for free",
-        succesLabelText: String =  "Thanks",
+        successLabelText: String =  "Thank you for donating!",
         successButtonText: String =  "Continue",
         successAction: (() -> Void)? = nil,
         secondaryButtonAction: (() -> Void)? = nil,
         isSecondaryButtonHidden: Bool = true,
-        associatedPurchaseItemId: String? = nil
+        purchaseIdForHistory: String? = nil
     ) {
         self.id = id
         self.purchaseProductIdentifiers = purchaseProductIdentifiers
@@ -69,70 +70,12 @@ public struct PurchaseConfiguration {
         self.salesLabelColor = salesLabelColor
         self.purchaseButtonText = purchaseButtonText
         self.secondaryButtonText = secondaryButtonText
-        self.succesLabelText = succesLabelText
+        self.successLabelText = successLabelText
         self.successButtonText = successButtonText
         self.successAction = successAction
         self.secondaryButtonAction = secondaryButtonAction
         self.isSecondaryButtonHidden = isSecondaryButtonHidden
-        self.associatedPurchaseItemId = associatedPurchaseItemId
+        self.purchaseIdForHistory = purchaseIdForHistory
     }
     
-        
-    
-}
-
-
-public class PurchaseHistory {
-    
-    
-    static func markPurchase(_ purchaseId: String?) {
-        
-        
-        
-        if let purchaseId = purchaseId {
-        
-            /// mark purchase id for the assoicated bonus item
-        
-            UserDefaults.standard.setValue(true, forKey: purchaseId)
-        } else {
-            /// mark the general fact of support
-            UserDefaults.standard.setValue(true, forKey: "didSupportApp")
-        }
-        
-        UserDefaults.standard.synchronize()
-
-    }
-    
-    public static func checkPurchase(_ purchaseId: String? = nil) -> Bool {
-        
-        guard let purchaseId = purchaseId else {
-            return UserDefaults.standard.bool(forKey: "didSupportApp")
-        }
-        
-        return UserDefaults.standard.bool(forKey:purchaseId)
-    }
-    
-    
-    
-}
-
-
-
-
-enum SalesText: String {
-    case standard = "SalesPitch"
-    case bonus = "SalesPitchBonus"
-    case returning = "SalesPitchReturningCustomer"
-}
-
-enum SuccessText: String {
-    case standard = "Thanks"
-    case bonus = "ThanksBonus"
-    case returning = "ThanksReturningCustomer"
-}
-
-enum SuccessButtonText: String {
-    case standard = "Continue"
-    case bonus = "Bonus"
-    case amen = "Amen"
 }

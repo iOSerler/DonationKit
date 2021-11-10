@@ -89,7 +89,7 @@ public class PurchaseController: UIViewController {
         label.numberOfLines = 0
         label.alpha = 0
         
-        label.text = purchaseConfig.succesLabelText
+        label.text = purchaseConfig.successLabelText
         
         label.adjustsFontSizeToFitWidth = true
         label.isHidden = true
@@ -232,7 +232,7 @@ public class PurchaseController: UIViewController {
             "configuration": purchaseConfig.id
         ])
         
-        PurchaseHistory.markPurchase(purchaseConfig.associatedPurchaseItemId)
+        PurchaseHistory.markPurchase(purchaseConfig.purchaseIdForHistory)
         
         UIView.animate(withDuration: 0.5, animations: {
             self.pricePickerView.alpha = 0
