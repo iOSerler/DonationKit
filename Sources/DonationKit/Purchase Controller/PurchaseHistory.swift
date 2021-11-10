@@ -9,7 +9,7 @@ import Foundation
 
 public struct PurchaseHistory {
         
-    static func markPurchase(_ purchaseId: String?) {
+    public static func markPurchase(_ purchaseId: String?) {
 
         if let purchaseId = purchaseId {
         
@@ -25,7 +25,7 @@ public struct PurchaseHistory {
 
     }
     
-    static func checkPurchase(_ purchaseId: String? = nil) -> Bool {
+    public static func checkPurchase(_ purchaseId: String? = nil) -> Bool {
         
         guard let purchaseId = purchaseId else {
             return UserDefaults.standard.bool(forKey: "didSupportApp")
