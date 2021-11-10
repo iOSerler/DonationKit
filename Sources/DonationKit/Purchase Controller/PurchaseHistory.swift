@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PurchaseHistory {
+public struct PurchaseHistory {
         
     static func markPurchase(_ purchaseId: String?) {
 
