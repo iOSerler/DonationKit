@@ -20,19 +20,19 @@ public struct PurchaseConfiguration {
     let salesLabelFont: UIFont
     let salesLabelColor: UIColor
         
-    let purchaseButtonText: String
+    let purchaseButtonTitle: String
     let purchaseButtonBackgroundColor: UIColor = .systemBlue
-    let purchaseButtonTextColor: UIColor = .white
+    let purchaseButtonTitleColor: UIColor = .white
     
-    let secondaryButtonText: String
+    let secondaryButtonTitle: String
     let secondaryButtonBackgroundColor: UIColor = .clear
-    let secondaryButtonTextColor: UIColor = UIColor.darkText
+    let secondaryButtonTitleColor: UIColor = UIColor.darkText
 
     let purchaseFailedText: String
-    let tryAgainButtonText: String
+    let tryAgainButtonTitle: String
 
     let successLabelText: String
-    let successButtonText: String
+    let successButtonTitle: String
     
     let successAction: (() -> Void)?
     let secondaryButtonAction: (() -> Void)?
@@ -49,12 +49,12 @@ public struct PurchaseConfiguration {
         salesLabelText: String =  "Your support makes apps better!",
         purchaseFailedText: String =  "Purchase failed, please try again",
         salesLabelFont: UIFont = UIFont.systemFont(ofSize: 17),
-        tryAgainButtonText: String =  "Try again",
+        tryAgainButtonTitle: String =  "Try again",
         salesLabelColor: UIColor = UIColor.darkText,
-        purchaseButtonText: String =  "Donate",
-        secondaryButtonText: String = "Continue for free",
+        purchaseButtonTitle: String =  "Donate",
+        secondaryButtonTitle: String = "Continue for free",
         successLabelText: String =  "Thank you for donating!",
-        successButtonText: String =  "Continue",
+        successButtonTitle: String =  "Continue",
         successAction: (() -> Void)? = nil,
         secondaryButtonAction: (() -> Void)? = nil,
         isSecondaryButtonHidden: Bool = true,
@@ -66,12 +66,12 @@ public struct PurchaseConfiguration {
         self.salesLabelText = salesLabelText
         self.purchaseFailedText = purchaseFailedText
         self.salesLabelFont = salesLabelFont
-        self.tryAgainButtonText = tryAgainButtonText
+        self.tryAgainButtonTitle = tryAgainButtonTitle
         self.salesLabelColor = salesLabelColor
-        self.purchaseButtonText = purchaseButtonText
-        self.secondaryButtonText = secondaryButtonText
+        self.purchaseButtonTitle = purchaseButtonTitle
+        self.secondaryButtonTitle = secondaryButtonTitle
         self.successLabelText = successLabelText
-        self.successButtonText = successButtonText
+        self.successButtonTitle = successButtonTitle
         self.successAction = successAction
         self.secondaryButtonAction = secondaryButtonAction
         self.isSecondaryButtonHidden = isSecondaryButtonHidden

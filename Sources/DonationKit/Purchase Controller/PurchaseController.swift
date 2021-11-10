@@ -108,9 +108,9 @@ public class PurchaseController: UIViewController {
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle(purchaseConfig.purchaseButtonText, for: UIControl.State())
+        button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
-        button.setTitleColor(purchaseConfig.purchaseButtonTextColor, for: .normal)
+        button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
 
         button.layer.cornerRadius = 5
@@ -128,7 +128,7 @@ public class PurchaseController: UIViewController {
         button.layer.cornerRadius = 5
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
         
-        button.setTitle(purchaseConfig.successButtonText, for: UIControl.State())
+        button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
         
         if let _ = purchaseConfig.successAction {
             button.addTarget(self, action: #selector(proceedToSuccesAction), for: .touchUpInside)
@@ -144,9 +144,9 @@ public class PurchaseController: UIViewController {
     
     private lazy var secondaryButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.setTitle(purchaseConfig.secondaryButtonText, for: UIControl.State())
+        button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.secondaryButtonBackgroundColor
-        button.setTitleColor(purchaseConfig.secondaryButtonTextColor, for: .normal)
+        button.setTitleColor(purchaseConfig.secondaryButtonTitleColor, for: .normal)
         
         if let _ = purchaseConfig.secondaryButtonAction {
             button.addTarget(self, action: #selector(proceedToSecondaryButtonAction), for: .touchUpInside)
@@ -156,7 +156,7 @@ public class PurchaseController: UIViewController {
 
         button.layer.borderWidth = 3
         button.layer.cornerRadius = 5
-        button.layer.borderColor = purchaseConfig.secondaryButtonTextColor.cgColor
+        button.layer.borderColor = purchaseConfig.secondaryButtonTitleColor.cgColor
         
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 94, width: 150, height: 44)
         button.isHidden = true
@@ -268,7 +268,7 @@ public class PurchaseController: UIViewController {
             self.salesPitchLabel.alpha = 0
         }) { _ in
             self.salesPitchLabel.text = self.purchaseConfig.purchaseFailedText
-            self.purchaseButton.setTitle(self.purchaseConfig.tryAgainButtonText, for: .normal)
+            self.purchaseButton.setTitle(self.purchaseConfig.tryAgainButtonTitle, for: .normal)
             UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
                 self.salesPitchLabel.alpha = 1
                 self.purchaseButton.alpha = 1
@@ -296,8 +296,6 @@ public class PurchaseController: UIViewController {
         ])
         IAPProducts.purchaseStore.buyProduct(product)
     }
-    
-    
     
     @objc private func proceedToSuccesAction() {
         purchaseConfig.successAction?()
