@@ -1,6 +1,0 @@
-public struct DonationKit {
-    public private(set) var text = "Hello, World!"
-
-    public init() {
-    }
-}
