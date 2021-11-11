@@ -12,12 +12,10 @@ public struct PurchaseHistory {
     public static func markPurchase(_ purchaseId: String?) {
 
         if let purchaseId = purchaseId {
-        
-            /// mark purchase id for the assoicated bonus item
-        
+            /// mark purchase with the custom user passed id
             UserDefaults.standard.setValue(true, forKey: purchaseId)
         } else {
-            /// mark the general fact of support
+            /// mark the generic act of support
             UserDefaults.standard.setValue(true, forKey: "didSupportApp")
         }
         
@@ -27,12 +25,14 @@ public struct PurchaseHistory {
     
     public static func checkPurchase(_ purchaseId: String? = nil) -> Bool {
         
-        guard let purchaseId = purchaseId else {
-            return UserDefaults.standard.bool(forKey: "didSupportApp")
+        if let purchaseId = purchaseId {
+            /// check purchase with the custom user passed id
+            return UserDefaults.standard.bool(forKey:purchaseId)
+        } else if UserDefaults.standard.bool(forKey: "didSupportApp") {
+            /// check the generic act of support
+            return true
+        } else {
+            return false
         }
-        
-        return UserDefaults.standard.bool(forKey:purchaseId)
     }
-    
-
 }
