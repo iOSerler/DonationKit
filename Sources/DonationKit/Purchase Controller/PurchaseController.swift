@@ -11,12 +11,8 @@ import StoreKit
 
 public class PurchaseController: UIViewController {
         
-    let purchaseConfig: PurchaseConfiguration
+    private let purchaseConfig: PurchaseConfiguration
     private let analytics: GenericAnalytics?
-    
-    public lazy var secondaryButtonAction: () -> Void = {
-      self.dismiss(animated: true, completion: nil)
-    }
     
     public init(purchaseConfig: PurchaseConfiguration, analytics: GenericAnalytics?) {
         self.purchaseConfig = purchaseConfig
@@ -27,6 +23,13 @@ public class PurchaseController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private static let priceFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.formatterBehavior = .behavior10_4
+        formatter.numberStyle = .currency
+        return formatter
+    }()
     
     private lazy var prices: [String] = []
     private var products = [SKProduct]() {
@@ -46,11 +49,11 @@ public class PurchaseController: UIViewController {
             productChosen = products.first
             
             DispatchQueue.main.async {
-                self.pricePickerView.reloadAllComponents()
                 self.activityIndicator.stopAnimating()
+                self.pricePickerView.reloadAllComponents()
+                self.salesPitchLabel.isHidden = false
                 self.purchaseButton.isHidden = false
                 self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
-                self.salesPitchLabel.isHidden = false
             }
         }
     }
@@ -68,13 +71,13 @@ public class PurchaseController: UIViewController {
     private lazy var salesPitchLabel: UILabel = {
         let label = UILabel()
         label.frame = CGRect(x: 30, y: 120, width: UIScreen.main.bounds.width - 60, height: 100)
-        label.font = UIFont.systemFont(ofSize: 21)
-        label.textColor = UIColor.darkText
-        label.textAlignment = NSTextAlignment.center
         label.numberOfLines = 0
         
         label.text = purchaseConfig.salesLabelText
+        label.font = purchaseConfig.salesLabelFont
+        label.textColor = purchaseConfig.salesLabelColor
         
+        label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
         label.isHidden = true
         return label
@@ -83,16 +86,16 @@ public class PurchaseController: UIViewController {
     private lazy var successLabel: UILabel = {
         let label = UILabel()
         label.frame = CGRect(x: 30, y: 120, width: UIScreen.main.bounds.width - 60, height: 100)
-        label.font = UIFont.systemFont(ofSize: 21)
-        label.textColor = UIColor.darkText
-        label.textAlignment = NSTextAlignment.center
         label.numberOfLines = 0
-        label.alpha = 0
         
         label.text = purchaseConfig.successLabelText
+        label.font = purchaseConfig.salesLabelFont
+        label.textColor = purchaseConfig.salesLabelColor
         
+        label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
         label.isHidden = true
+        label.alpha = 0
         return label
     }()
     
@@ -108,11 +111,11 @@ public class PurchaseController: UIViewController {
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 154, width: 150, height: 44)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 154, width: 250, height: 44)
         button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
-        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+        button.titleLabel?.font = purchaseConfig.purchaseButtonFont
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
         button.layer.cornerRadius = 5
 
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
@@ -123,11 +126,11 @@ public class PurchaseController: UIViewController {
     
     private lazy var proceedButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 250, height: 44)
         button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
-        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+        button.titleLabel?.font = purchaseConfig.purchaseButtonFont
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
         button.layer.cornerRadius = 5
         
         if let _ = purchaseConfig.successAction {
@@ -144,18 +147,19 @@ public class PurchaseController: UIViewController {
     private lazy var secondaryButton: UIButton = {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 94, width: 150, height: 44)
+        
+        button.isHidden = purchaseConfig.isSecondaryButtonHidden
         button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.secondaryButtonBackgroundColor
         button.setTitleColor(purchaseConfig.secondaryButtonTitleColor, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .light)
+        button.titleLabel?.font = purchaseConfig.secondaryButtonFont
         
-        if let _ = purchaseConfig.secondaryButtonAction {
+        if let _ = purchaseConfig.secondaryAction {
             button.addTarget(self, action: #selector(proceedToSecondaryButtonAction), for: .touchUpInside)
         } else {
             button.addTarget(self, action: #selector(pop), for: .touchUpInside)
         }
         
-        button.isHidden = true
         return button
     }()
     
@@ -234,6 +238,7 @@ public class PurchaseController: UIViewController {
         UIView.animate(withDuration: 0.5, animations: {
             self.pricePickerView.alpha = 0
             self.purchaseButton.alpha = 0
+            self.secondaryButton.alpha = 0
             self.salesPitchLabel.alpha = 0
         }) { _ in
             
@@ -299,15 +304,8 @@ public class PurchaseController: UIViewController {
     }
     
     @objc private func proceedToSecondaryButtonAction() {
-        purchaseConfig.secondaryButtonAction?()
+        purchaseConfig.secondaryAction?()
     }
-    
-    private static let priceFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.formatterBehavior = .behavior10_4
-        formatter.numberStyle = .currency
-        return formatter
-    }()
     
     
 }

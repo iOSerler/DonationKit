@@ -21,60 +21,86 @@ public struct PurchaseConfiguration {
     let salesLabelColor: UIColor
         
     let purchaseButtonTitle: String
-    let purchaseButtonBackgroundColor: UIColor = .systemBlue
-    let purchaseButtonTitleColor: UIColor = .white
+    let purchaseButtonFont: UIFont
+    let purchaseButtonTitleColor: UIColor
+    let purchaseButtonBackgroundColor: UIColor
     
+    let isSecondaryButtonHidden: Bool
     let secondaryButtonTitle: String
-    let secondaryButtonBackgroundColor: UIColor = .clear
-    let secondaryButtonTitleColor: UIColor = UIColor.darkText
-
-    let purchaseFailedText: String
-    let tryAgainButtonTitle: String
+    let secondaryButtonFont: UIFont
+    let secondaryButtonTitleColor: UIColor
+    let secondaryButtonBackgroundColor: UIColor
 
     let successLabelText: String
     let successButtonTitle: String
     
-    let successAction: (() -> Void)?
-    let secondaryButtonAction: (() -> Void)?
-    let isSecondaryButtonHidden: Bool
+    let purchaseFailedText: String
+    let tryAgainButtonTitle: String
     
-    /// a custom ID to log the successful purchase
-    /// if nil, product identifier will be userd
+    let successAction: (() -> Void)?
+    let secondaryAction: (() -> Void)?
+    
+    /// an optional custom ID to log the successful purchase
     let purchaseIdForHistory: String?
     
     public init(
         id: String,
         purchaseProductIdentifiers: [ProductIdentifier],
-        headerTitle: String = "Donate",
-        salesLabelText: String =  "Your support makes apps better!",
-        purchaseFailedText: String =  "Purchase failed, please try again",
-        salesLabelFont: UIFont = UIFont.systemFont(ofSize: 17),
-        tryAgainButtonTitle: String =  "Try again",
+        headerTitle: String = "Donation",
+        
+        salesLabelText: String =  "Please support us by donating!",
+        salesLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
         salesLabelColor: UIColor = UIColor.darkText,
+        
         purchaseButtonTitle: String =  "Donate",
-        secondaryButtonTitle: String = "Continue for free",
+        purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .medium),
+        purchaseButtonTitleColor: UIColor  = .white,
+        purchaseButtonBackgroundColor: UIColor = .systemBlue,
+        
+        isSecondaryButtonHidden: Bool = true,
+        secondaryButtonTitle: String = "Skip",
+        secondaryButtonFont: UIFont = UIFont.systemFont(ofSize: 17, weight: .light),
+        secondaryButtonTitleColor: UIColor = UIColor.darkText,
+        secondaryButtonBackgroundColor: UIColor = .clear,
+        
         successLabelText: String =  "Thank you for donating!",
         successButtonTitle: String =  "Continue",
+        
+        purchaseFailedText: String =  "Purchase failed, please try again",
+        tryAgainButtonTitle: String =  "Try again",
+        
         successAction: (() -> Void)? = nil,
-        secondaryButtonAction: (() -> Void)? = nil,
-        isSecondaryButtonHidden: Bool = true,
+        secondaryAction: (() -> Void)? = nil,
         purchaseIdForHistory: String? = nil
     ) {
         self.id = id
         self.purchaseProductIdentifiers = purchaseProductIdentifiers
+        
         self.headerTitle = headerTitle
+        
         self.salesLabelText = salesLabelText
-        self.purchaseFailedText = purchaseFailedText
         self.salesLabelFont = salesLabelFont
-        self.tryAgainButtonTitle = tryAgainButtonTitle
         self.salesLabelColor = salesLabelColor
+                
         self.purchaseButtonTitle = purchaseButtonTitle
+        self.purchaseButtonFont = purchaseButtonFont
+        self.purchaseButtonTitleColor = purchaseButtonTitleColor
+        self.purchaseButtonBackgroundColor = purchaseButtonBackgroundColor
+        
+        self.isSecondaryButtonHidden = isSecondaryButtonHidden
         self.secondaryButtonTitle = secondaryButtonTitle
+        self.secondaryButtonFont = secondaryButtonFont
+        self.secondaryButtonTitleColor = secondaryButtonTitleColor
+        self.secondaryButtonBackgroundColor = secondaryButtonBackgroundColor
+        
         self.successLabelText = successLabelText
         self.successButtonTitle = successButtonTitle
+        
+        self.purchaseFailedText = purchaseFailedText
+        self.tryAgainButtonTitle = tryAgainButtonTitle
+        
         self.successAction = successAction
-        self.secondaryButtonAction = secondaryButtonAction
-        self.isSecondaryButtonHidden = isSecondaryButtonHidden
+        self.secondaryAction = secondaryAction
         self.purchaseIdForHistory = purchaseIdForHistory
     }
     
