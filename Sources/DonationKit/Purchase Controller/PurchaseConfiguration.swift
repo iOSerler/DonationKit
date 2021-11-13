@@ -53,7 +53,7 @@ public struct PurchaseConfiguration {
         salesLabelColor: UIColor = UIColor.darkText,
         
         purchaseButtonTitle: String =  "Donate",
-        purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .medium),
+        purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .semibold),
         purchaseButtonTitleColor: UIColor  = .white,
         purchaseButtonBackgroundColor: UIColor = .systemBlue,
         

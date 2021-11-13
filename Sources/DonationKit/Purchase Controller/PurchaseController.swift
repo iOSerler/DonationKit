@@ -111,7 +111,7 @@ public class PurchaseController: UIViewController {
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 154, width: 250, height: 44)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 125, y: UIScreen.main.bounds.height - 154, width: 250, height: 44)
         button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
         button.titleLabel?.font = purchaseConfig.purchaseButtonFont
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
@@ -126,7 +126,7 @@ public class PurchaseController: UIViewController {
     
     private lazy var proceedButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 250, height: 44)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 125, y: UIScreen.main.bounds.height - 104, width: 250, height: 44)
         button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
         button.titleLabel?.font = purchaseConfig.purchaseButtonFont
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
