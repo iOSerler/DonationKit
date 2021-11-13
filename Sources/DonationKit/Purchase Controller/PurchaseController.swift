@@ -107,28 +107,28 @@ public class PurchaseController: UIViewController {
     }()
     
     private lazy var purchaseButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 154, width: 150, height: 44)
         button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
-
+        button.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         button.layer.cornerRadius = 5
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 154, width: 150, height: 44)
+
+        button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
+        
         button.isHidden = true
         return button
     }()
     
     private lazy var proceedButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.setTitleColor(UIColor.darkText, for: .normal)
-        button.backgroundColor = .clear
-        button.layer.borderWidth = 3
-        button.layer.borderColor = UIColor.darkText.cgColor
-        button.layer.cornerRadius = 5
+        let button = UIButton(type: .system)
         button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 104, width: 150, height: 44)
-        
         button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
+        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+        button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
+        button.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.layer.cornerRadius = 5
         
         if let _ = purchaseConfig.successAction {
             button.addTarget(self, action: #selector(proceedToSuccesAction), for: .touchUpInside)
@@ -136,31 +136,26 @@ public class PurchaseController: UIViewController {
             button.addTarget(self, action: #selector(pop), for: .touchUpInside)
         }
         
-        
         button.isHidden = true
         button.alpha = 0
         return button
     }()
     
     private lazy var secondaryButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 94, width: 150, height: 44)
         button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.secondaryButtonBackgroundColor
         button.setTitleColor(purchaseConfig.secondaryButtonTitleColor, for: .normal)
+        button.font = UIFont.systemFont(ofSize: 17, weight: .light)
         
         if let _ = purchaseConfig.secondaryButtonAction {
             button.addTarget(self, action: #selector(proceedToSecondaryButtonAction), for: .touchUpInside)
         } else {
             button.addTarget(self, action: #selector(pop), for: .touchUpInside)
         }
-
-        button.layer.borderWidth = 3
-        button.layer.cornerRadius = 5
-        button.layer.borderColor = purchaseConfig.secondaryButtonTitleColor.cgColor
         
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 94, width: 150, height: 44)
         button.isHidden = true
-
         return button
     }()
     
@@ -217,7 +212,7 @@ public class PurchaseController: UIViewController {
             
             self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
             self.proceedButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
-            self.secondaryButton.frame.origin.y = UIScreen.main.bounds.height - 104 - safeArea.bottom
+            self.secondaryButton.frame.origin.y = UIScreen.main.bounds.height - 94 - safeArea.bottom
             self.pricePickerView.frame.size.height = UIScreen.main.bounds.height -  180 - 144 - safeArea.bottom
         }
     }
