@@ -112,7 +112,7 @@ public class PurchaseController: UIViewController {
         button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         button.layer.cornerRadius = 5
 
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
@@ -127,7 +127,7 @@ public class PurchaseController: UIViewController {
         button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         button.layer.cornerRadius = 5
         
         if let _ = purchaseConfig.successAction {
@@ -147,7 +147,7 @@ public class PurchaseController: UIViewController {
         button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
         button.backgroundColor = purchaseConfig.secondaryButtonBackgroundColor
         button.setTitleColor(purchaseConfig.secondaryButtonTitleColor, for: .normal)
-        button.font = UIFont.systemFont(ofSize: 17, weight: .light)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .light)
         
         if let _ = purchaseConfig.secondaryButtonAction {
             button.addTarget(self, action: #selector(proceedToSecondaryButtonAction), for: .touchUpInside)
