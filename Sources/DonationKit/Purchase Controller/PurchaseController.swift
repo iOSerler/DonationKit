@@ -215,7 +215,9 @@ public class PurchaseController: UIViewController {
             
             let safeArea = self.view.safeAreaInsets
             
-            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 124 - safeArea.bottom
+            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
+            self.proceedButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
+            self.secondaryButton.frame.origin.y = UIScreen.main.bounds.height - 104 - safeArea.bottom
             self.pricePickerView.frame.size.height = UIScreen.main.bounds.height -  180 - 144 - safeArea.bottom
         }
     }
