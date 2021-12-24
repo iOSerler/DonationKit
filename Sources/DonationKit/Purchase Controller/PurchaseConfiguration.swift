@@ -14,43 +14,49 @@ public struct PurchaseConfiguration {
     let id: String
     let purchaseProductIdentifiers: [ProductIdentifier]
     
-    let headerTitle: String
+    let title: String
     
-    let salesLabelText: String
-    let salesLabelFont: UIFont
-    let salesLabelColor: UIColor
-        
+    /// Statement Label
+    let statementLabelText: String
+    let statementLabelFont: UIFont
+    let statementLabelColor: UIColor
+    
+    /// Purchase Button
     let purchaseButtonTitle: String
     let purchaseButtonFont: UIFont
     let purchaseButtonTitleColor: UIColor
     let purchaseButtonBackgroundColor: UIColor
     
+    /// Secondary Action Title
     let isSecondaryButtonHidden: Bool
     let secondaryButtonTitle: String
     let secondaryButtonFont: UIFont
     let secondaryButtonTitleColor: UIColor
     let secondaryButtonBackgroundColor: UIColor
 
+    /// Success Label
     let successLabelText: String
     let successButtonTitle: String
     
+    /// Purchase Failed Label
     let purchaseFailedText: String
     let tryAgainButtonTitle: String
     
+    /// Callbacks for functional behaviour
     let successAction: (() -> Void)?
     let secondaryAction: (() -> Void)?
     
-    /// an optional custom ID to log the successful purchase
+    /// Custom ID to log a successful purchase
     let purchaseIdForHistory: String?
     
     public init(
         id: String,
         purchaseProductIdentifiers: [ProductIdentifier],
-        headerTitle: String = "Donation",
+        title: String = "Donation",
         
-        salesLabelText: String =  "Please support us by donating!",
-        salesLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
-        salesLabelColor: UIColor = UIColor.darkText,
+        statementLabelText: String =  "Please support us by donating!",
+        statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
+        statementLabelColor: UIColor = UIColor.darkText,
         
         purchaseButtonTitle: String =  "Donate",
         purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .semibold),
@@ -76,11 +82,11 @@ public struct PurchaseConfiguration {
         self.id = id
         self.purchaseProductIdentifiers = purchaseProductIdentifiers
         
-        self.headerTitle = headerTitle
+        self.title = title
         
-        self.salesLabelText = salesLabelText
-        self.salesLabelFont = salesLabelFont
-        self.salesLabelColor = salesLabelColor
+        self.statementLabelText = statementLabelText
+        self.statementLabelFont = statementLabelFont
+        self.statementLabelColor = statementLabelColor
                 
         self.purchaseButtonTitle = purchaseButtonTitle
         self.purchaseButtonFont = purchaseButtonFont

@@ -73,9 +73,9 @@ public class PurchaseController: UIViewController {
         label.frame = CGRect(x: 30, y: 120, width: UIScreen.main.bounds.width - 60, height: 100)
         label.numberOfLines = 0
         
-        label.text = purchaseConfig.salesLabelText
-        label.font = purchaseConfig.salesLabelFont
-        label.textColor = purchaseConfig.salesLabelColor
+        label.text = purchaseConfig.statementLabelText
+        label.font = purchaseConfig.statementLabelFont
+        label.textColor = purchaseConfig.statementLabelColor
         
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
@@ -89,8 +89,8 @@ public class PurchaseController: UIViewController {
         label.numberOfLines = 0
         
         label.text = purchaseConfig.successLabelText
-        label.font = purchaseConfig.salesLabelFont
-        label.textColor = purchaseConfig.salesLabelColor
+        label.font = purchaseConfig.statementLabelFont
+        label.textColor = purchaseConfig.statementLabelColor
         
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
@@ -180,7 +180,7 @@ public class PurchaseController: UIViewController {
     private func setupViews() {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
-        self.title = purchaseConfig.headerTitle
+        self.title = purchaseConfig.title
         self.view.addSubview(salesPitchLabel)
         self.view.addSubview(successLabel)
         self.view.addSubview(pricePickerView)
