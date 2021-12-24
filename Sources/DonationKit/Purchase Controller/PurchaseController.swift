@@ -14,7 +14,7 @@ public class PurchaseController: UIViewController {
     private let purchaseConfig: PurchaseConfiguration
     private let analytics: GenericAnalytics?
     
-    public init(purchaseConfig: PurchaseConfiguration, analytics: GenericAnalytics?) {
+    public init(purchaseConfig: PurchaseConfiguration, analytics: GenericAnalytics? = nil) {
         self.purchaseConfig = purchaseConfig
         self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
