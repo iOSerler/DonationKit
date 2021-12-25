@@ -51,7 +51,7 @@ public class PurchaseController: UIViewController {
             DispatchQueue.main.async {
                 self.activityIndicator.stopAnimating()
                 self.pricePickerView.reloadAllComponents()
-                self.salesPitchLabel.isHidden = false
+                self.statementLabel.isHidden = false
                 self.purchaseButton.isHidden = false
                 self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
             }
@@ -63,14 +63,22 @@ public class PurchaseController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.hidesWhenStopped = true
-        indicator.frame = CGRect(x:  UIScreen.main.bounds.width/2 - 25, y: 200, width: 50, height: 50)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.startAnimating()
         return indicator
     }()
     
-    private lazy var salesPitchLabel: UILabel = {
+    private lazy var visualImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = purchaseConfig.statementImage
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private lazy var statementLabel: UILabel = {
         let label = UILabel()
-        label.frame = CGRect(x: 30, y: 120, width: UIScreen.main.bounds.width - 60, height: 100)
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
         label.text = purchaseConfig.statementLabelText
@@ -83,35 +91,17 @@ public class PurchaseController: UIViewController {
         return label
     }()
     
-    private lazy var successLabel: UILabel = {
-        let label = UILabel()
-        label.frame = CGRect(x: 30, y: 120, width: UIScreen.main.bounds.width - 60, height: 100)
-        label.numberOfLines = 0
-        
-        label.text = purchaseConfig.successLabelText
-        label.font = purchaseConfig.statementLabelFont
-        label.textColor = purchaseConfig.statementLabelColor
-        
-        label.textAlignment = NSTextAlignment.center
-        label.adjustsFontSizeToFitWidth = true
-        label.isHidden = true
-        label.alpha = 0
-        return label
-    }()
-    
-    
     private lazy var pricePickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.dataSource = self
         picker.delegate = self
-        picker.tintColor = UIColor.darkText
-        picker.frame = CGRect(x: 0, y: 180, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height -  180 - 124)
+        picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 125, y: UIScreen.main.bounds.height - 154, width: 250, height: 44)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
         button.titleLabel?.font = purchaseConfig.purchaseButtonFont
         button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
@@ -124,29 +114,9 @@ public class PurchaseController: UIViewController {
         return button
     }()
     
-    private lazy var proceedButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 125, y: UIScreen.main.bounds.height - 104, width: 250, height: 44)
-        button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchaseConfig.purchaseButtonFont
-        button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
-        button.layer.cornerRadius = 5
-        
-        if let _ = purchaseConfig.successAction {
-            button.addTarget(self, action: #selector(proceedToSuccesAction), for: .touchUpInside)
-        } else {
-            button.addTarget(self, action: #selector(pop), for: .touchUpInside)
-        }
-        
-        button.isHidden = true
-        button.alpha = 0
-        return button
-    }()
-    
     private lazy var secondaryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.frame = CGRect(x: UIScreen.main.bounds.width * 0.5 - 75, y: UIScreen.main.bounds.height - 94, width: 150, height: 44)
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         button.isHidden = purchaseConfig.isSecondaryButtonHidden
         button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
@@ -181,13 +151,43 @@ public class PurchaseController: UIViewController {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
         self.title = purchaseConfig.title
-        self.view.addSubview(salesPitchLabel)
-        self.view.addSubview(successLabel)
+        self.view.backgroundColor = purchaseConfig.backgroundColor
+        self.view.addSubview(visualImageView)
+        self.view.addSubview(statementLabel)
         self.view.addSubview(pricePickerView)
         self.view.addSubview(purchaseButton)
         self.view.addSubview(secondaryButton)
-        self.view.addSubview(proceedButton)
         self.view.addSubview(activityIndicator)
+        
+        self.activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
+        self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+        
+        self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        self.visualImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+        self.visualImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
+        self.visualImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
+                
+        self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
+        self.statementLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        self.statementLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        self.statementLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
+
+        self.pricePickerView.topAnchor.constraint(equalTo: statementLabel.bottomAnchor, constant: 8).isActive = true
+        self.pricePickerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+        self.pricePickerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+        self.pricePickerView.bottomAnchor.constraint(greaterThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
+        
+        self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
+        self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        self.purchaseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+        
+        self.secondaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
+        self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        self.secondaryButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
         
     }
     
@@ -207,19 +207,6 @@ public class PurchaseController: UIViewController {
         }
     }
     
-    override public func viewSafeAreaInsetsDidChange() {
-        if #available(iOS 11.0, *) {
-            
-            super.viewSafeAreaInsetsDidChange()
-            
-            let safeArea = self.view.safeAreaInsets
-            
-            self.purchaseButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
-            self.proceedButton.frame.origin.y = UIScreen.main.bounds.height - 154 - safeArea.bottom
-            self.secondaryButton.frame.origin.y = UIScreen.main.bounds.height - 94 - safeArea.bottom
-            self.pricePickerView.frame.size.height = UIScreen.main.bounds.height -  180 - 144 - safeArea.bottom
-        }
-    }
     
     @objc private func pop() {
         self.navigationController?.popViewController(animated: true)
@@ -235,20 +222,7 @@ public class PurchaseController: UIViewController {
         
         PurchaseHistory.markPurchase(purchaseConfig.purchaseIdForHistory)
         
-        UIView.animate(withDuration: 0.5, animations: {
-            self.pricePickerView.alpha = 0
-            self.purchaseButton.alpha = 0
-            self.secondaryButton.alpha = 0
-            self.salesPitchLabel.alpha = 0
-        }) { _ in
-            
-            UIView.animate(withDuration: 0.5, delay: 0.5, animations: {
-                self.proceedButton.isHidden = false
-                self.proceedButton.alpha = 1
-                self.successLabel.isHidden = false
-                self.successLabel.alpha = 1
-            })
-        }
+        self.navigationController?.pushViewController(SuccessController(purchaseConfig: purchaseConfig, analytics: analytics), animated: true)
     }
     
     @objc private func handleFailueNotification(_ notification: Notification) {
@@ -267,12 +241,12 @@ public class PurchaseController: UIViewController {
         
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
-            self.salesPitchLabel.alpha = 0
+            self.statementLabel.alpha = 0
         }) { _ in
-            self.salesPitchLabel.text = self.purchaseConfig.purchaseFailedText
+            self.statementLabel.text = self.purchaseConfig.purchaseFailedText
             self.purchaseButton.setTitle(self.purchaseConfig.tryAgainButtonTitle, for: .normal)
             UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
-                self.salesPitchLabel.alpha = 1
+                self.statementLabel.alpha = 1
                 self.purchaseButton.alpha = 1
             })
         }

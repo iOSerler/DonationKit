@@ -15,6 +15,11 @@ public struct PurchaseConfiguration {
     let purchaseProductIdentifiers: [ProductIdentifier]
     
     let title: String
+    let backgroundColor: UIColor
+    
+    /// Images
+    let statementImage: UIImage?
+    let successImage: UIImage?
     
     /// Statement Label
     let statementLabelText: String
@@ -49,28 +54,30 @@ public struct PurchaseConfiguration {
     /// Custom ID to log a successful purchase
     let purchaseIdForHistory: String?
     
+    @available(iOS 13.0, *)
     public init(
         id: String,
         purchaseProductIdentifiers: [ProductIdentifier],
         title: String = "Donation",
+        backgroundColor: UIColor = .systemBackground,
         
         statementLabelText: String =  "Please support us by donating!",
         statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
-        statementLabelColor: UIColor = UIColor.darkText,
+        statementLabelColor: UIColor = UIColor.label,
         
         purchaseButtonTitle: String =  "Donate",
         purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .semibold),
-        purchaseButtonTitleColor: UIColor  = .white,
+        purchaseButtonTitleColor: UIColor  = .systemBackground,
         purchaseButtonBackgroundColor: UIColor = .systemBlue,
         
         isSecondaryButtonHidden: Bool = true,
         secondaryButtonTitle: String = "Skip",
         secondaryButtonFont: UIFont = UIFont.systemFont(ofSize: 17, weight: .light),
-        secondaryButtonTitleColor: UIColor = UIColor.darkText,
+        secondaryButtonTitleColor: UIColor = UIColor.label,
         secondaryButtonBackgroundColor: UIColor = .clear,
         
-        successLabelText: String =  "Thank you for donating!",
-        successButtonTitle: String =  "Continue",
+        successLabelText: String =  "Thank you for your generosity!",
+        successButtonTitle: String =  "You're welcome",
         
         purchaseFailedText: String =  "Purchase failed, please try again",
         tryAgainButtonTitle: String =  "Try again",
@@ -83,6 +90,10 @@ public struct PurchaseConfiguration {
         self.purchaseProductIdentifiers = purchaseProductIdentifiers
         
         self.title = title
+        self.backgroundColor = backgroundColor
+        
+        self.statementImage = UIImage(systemName: "gift.circle.fill")
+        self.successImage = UIImage(systemName: "heart.circle.fill")
         
         self.statementLabelText = statementLabelText
         self.statementLabelFont = statementLabelFont
