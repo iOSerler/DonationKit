@@ -32,31 +32,7 @@ public class PurchaseController: UIViewController {
     }()
     
     private lazy var prices: [String] = []
-    private var products = [SKProduct]() {
-        didSet {
-            prices = []
-            
-            products.sort { Int(truncating: $0.price) < Int(truncating: $1.price) }
-            for product in products {
-                if IAPHelper.canMakePayments() {
-                    PurchaseController.priceFormatter.locale = product.priceLocale
-                    prices.append("\(PurchaseController.priceFormatter.string(from: product.price)!)")
-                } else {
-                    //not available for purchse
-                }
-            }
-            
-            productChosen = products.first
-            
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-                self.pricePickerView.reloadAllComponents()
-                self.statementLabel.isHidden = false
-                self.purchaseButton.isHidden = false
-                self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
-            }
-        }
-    }
+    private var products = [SKProduct]()
     
     private var productChosen: SKProduct?
     
@@ -164,7 +140,7 @@ public class PurchaseController: UIViewController {
         self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
         
-        self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+        self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         self.visualImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
         self.visualImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
         self.visualImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
@@ -174,10 +150,10 @@ public class PurchaseController: UIViewController {
         self.statementLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
         self.statementLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
 
-        self.pricePickerView.topAnchor.constraint(equalTo: statementLabel.bottomAnchor, constant: 8).isActive = true
+        self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
         self.pricePickerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
         self.pricePickerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        self.pricePickerView.bottomAnchor.constraint(greaterThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
+        self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
         
         self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
         self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
@@ -198,7 +174,32 @@ public class PurchaseController: UIViewController {
         IAPProducts.purchaseStore.requestProducts{success, productArray in
                         
             if success {
-                self.products = productArray!
+                
+                self.products = productArray!.sorted { Int(truncating: $0.price) < Int(truncating: $1.price) }
+                
+                var prices: [String] = []
+                
+                for product in self.products {
+                    if IAPHelper.canMakePayments() {
+                        PurchaseController.priceFormatter.locale = product.priceLocale
+                        prices.append("\(PurchaseController.priceFormatter.string(from: product.price)!)")
+                    } else {
+                        //not available for purchse
+                    }
+                }
+                
+                self.prices = prices
+                
+                self.productChosen = self.products.first
+                
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                    self.pricePickerView.reloadAllComponents()
+                    self.statementLabel.isHidden = false
+                    self.purchaseButton.isHidden = false
+                    self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
+                }
+                
             } else {
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
