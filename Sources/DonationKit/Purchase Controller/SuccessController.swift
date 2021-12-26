@@ -11,11 +11,11 @@ import StoreKit
 public class SuccessController: UIViewController {
         
     private let purchaseConfig: PurchaseConfiguration
-    private let analytics: GenericAnalytics?
+    private let analytics: AbstractAnalytics?
     
     private var wasNavigationBarHidden: Bool = false
     
-    public init(purchaseConfig: PurchaseConfiguration, analytics: GenericAnalytics? = nil) {
+    public init(purchaseConfig: PurchaseConfiguration, analytics: AbstractAnalytics? = nil) {
         self.purchaseConfig = purchaseConfig
         self.analytics = analytics
         

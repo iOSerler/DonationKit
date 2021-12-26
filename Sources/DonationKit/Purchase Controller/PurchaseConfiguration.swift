@@ -56,7 +56,7 @@ public struct PurchaseConfiguration {
     
     @available(iOS 13.0, *)
     public init(
-        id: String,
+        id: String = "",
         purchaseProductIdentifiers: [ProductIdentifier],
         title: String = "Donation",
         backgroundColor: UIColor = .systemBackground,

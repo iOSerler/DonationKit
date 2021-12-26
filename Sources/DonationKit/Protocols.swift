@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol GenericAnalytics {
+public protocol AbstractAnalytics {
     func logEvent(_ eventName: String, properties: [String:Any]?)
     func setUserProperty(_ property: String, value: Any)
 }

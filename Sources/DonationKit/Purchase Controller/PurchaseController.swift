@@ -12,9 +12,9 @@ import StoreKit
 public class PurchaseController: UIViewController {
         
     private let purchaseConfig: PurchaseConfiguration
-    private let analytics: GenericAnalytics?
+    private let analytics: AbstractAnalytics?
     
-    public init(purchaseConfig: PurchaseConfiguration, analytics: GenericAnalytics? = nil) {
+    public init(purchaseConfig: PurchaseConfiguration, analytics: AbstractAnalytics? = nil) {
         self.purchaseConfig = purchaseConfig
         self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
