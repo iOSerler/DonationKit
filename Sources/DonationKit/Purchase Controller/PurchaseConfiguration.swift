@@ -17,11 +17,8 @@ public struct PurchaseConfiguration {
     let title: String
     let backgroundColor: UIColor
     
-    /// Images
+    /// Statement
     let statementImage: UIImage?
-    let successImage: UIImage?
-    
-    /// Statement Label
     let statementLabelText: String
     let statementLabelFont: UIFont
     let statementLabelColor: UIColor
@@ -39,7 +36,9 @@ public struct PurchaseConfiguration {
     let secondaryButtonTitleColor: UIColor
     let secondaryButtonBackgroundColor: UIColor
 
-    /// Success Label
+    /// Successful Purchase
+    let successImage: UIImage?
+    let isSuccessImagePulsating: Bool
     let successLabelText: String
     let successButtonTitle: String
     
@@ -61,6 +60,7 @@ public struct PurchaseConfiguration {
         title: String = "Donation",
         backgroundColor: UIColor = .systemBackground,
         
+        statementImage: UIImage? = UIImage(systemName: "gift.circle.fill"),
         statementLabelText: String =  "Please support us by donating!",
         statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
         statementLabelColor: UIColor = UIColor.label,
@@ -76,6 +76,8 @@ public struct PurchaseConfiguration {
         secondaryButtonTitleColor: UIColor = UIColor.label,
         secondaryButtonBackgroundColor: UIColor = .clear,
         
+        successImage: UIImage? = UIImage(systemName: "heart.fill")?.withTintColor(.red, renderingMode: .alwaysOriginal),
+        isSuccessImagePulsating: Bool = true,
         successLabelText: String =  "Thank you for your generosity!",
         successButtonTitle: String =  "You're welcome",
         
@@ -92,9 +94,7 @@ public struct PurchaseConfiguration {
         self.title = title
         self.backgroundColor = backgroundColor
         
-        self.statementImage = UIImage(systemName: "gift.circle.fill")
-        self.successImage = UIImage(systemName: "heart.circle.fill")
-        
+        self.statementImage = statementImage
         self.statementLabelText = statementLabelText
         self.statementLabelFont = statementLabelFont
         self.statementLabelColor = statementLabelColor
@@ -110,6 +110,8 @@ public struct PurchaseConfiguration {
         self.secondaryButtonTitleColor = secondaryButtonTitleColor
         self.secondaryButtonBackgroundColor = secondaryButtonBackgroundColor
         
+        self.successImage = successImage
+        self.isSuccessImagePulsating = isSuccessImagePulsating
         self.successLabelText = successLabelText
         self.successButtonTitle = successButtonTitle
         

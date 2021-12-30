@@ -106,7 +106,16 @@ public class SuccessController: UIViewController {
         self.proceedButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
         self.proceedButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         self.proceedButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-
+        
+        if purchaseConfig.isSuccessImagePulsating {
+            let scaleAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
+            scaleAnimation.duration = 1.0
+            scaleAnimation.repeatCount = 3.0
+            scaleAnimation.autoreverses = true
+            scaleAnimation.fromValue = 1.0;
+            scaleAnimation.toValue = 1.2;
+            self.successImageView.layer.add(scaleAnimation, forKey: "scale")
+        }
     }
     
     @objc private func pop() {
