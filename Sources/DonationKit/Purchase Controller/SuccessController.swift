@@ -95,7 +95,7 @@ public class SuccessController: UIViewController {
         self.successImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
         self.successImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
         self.successImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-        self.successImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.40).isActive = true
+        self.successImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.30).isActive = true
                 
         self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
         self.successLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
@@ -113,7 +113,7 @@ public class SuccessController: UIViewController {
             scaleAnimation.repeatCount = 3.0
             scaleAnimation.autoreverses = true
             scaleAnimation.fromValue = 1.0;
-            scaleAnimation.toValue = 1.2;
+            scaleAnimation.toValue = 1.15;
             self.successImageView.layer.add(scaleAnimation, forKey: "scale")
         }
     }
