@@ -135,35 +135,68 @@ public class PurchaseController: UIViewController {
         self.view.addSubview(secondaryButton)
         self.view.addSubview(activityIndicator)
         
-        self.activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
-        self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        self.activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-        
-        self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        self.visualImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-        self.visualImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-        self.visualImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
-                
-        self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
-        self.statementLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-        self.statementLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        self.statementLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
+        if #available(iOS 11.0, *) {
+            self.activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
+            self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            self.activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+            
+            self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+            self.visualImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+            self.visualImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
+            self.visualImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
+                    
+            self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
+            self.statementLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+            self.statementLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+            self.statementLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
 
-        self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
-        self.pricePickerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-        self.pricePickerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-        self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
+            self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
+            self.pricePickerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+            self.pricePickerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+            self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
+            
+            self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
+            self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+            self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            self.purchaseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+            
+            self.secondaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
+            self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+            self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            self.secondaryButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+        } else {
+            self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+            self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+            self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+            
+            self.visualImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+            self.visualImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+            self.visualImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+            self.visualImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+                    
+            self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
+            self.statementLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+            self.statementLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+            self.statementLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+
+            self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
+            self.pricePickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+            self.pricePickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+            self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
+            
+            self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
+            self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+            self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            self.purchaseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+            
+            self.secondaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+            self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+            self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            self.secondaryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        }
         
-        self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
-        self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        self.purchaseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-        
-        self.secondaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
-        self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        self.secondaryButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
         
     }
     
