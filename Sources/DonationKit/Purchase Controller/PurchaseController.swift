@@ -49,6 +49,7 @@ public class PurchaseController: UIViewController {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = purchaseConfig.statementImage
         imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -57,10 +58,23 @@ public class PurchaseController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
-        label.text = purchaseConfig.statementLabelText
-        label.font = purchaseConfig.statementLabelFont
-        label.textColor = purchaseConfig.statementLabelColor
+        let labelString = NSMutableAttributedString(string: purchaseConfig.statementLabelText, attributes: [
+            NSAttributedString.Key.font : purchaseConfig.statementLabelFont,
+            NSAttributedString.Key.foregroundColor : purchaseConfig.statementLabelColor,
+            
+        ])
         
+        if let highlightedText = purchaseConfig.highlightedLabelText {
+            
+            let boldString = NSMutableAttributedString(string: highlightedText, attributes: [
+                NSAttributedString.Key.font : purchaseConfig.highlightedLabelFont,
+                NSAttributedString.Key.foregroundColor : purchaseConfig.statementLabelColor,
+                
+            ])
+            labelString.append(boldString)
+        }
+        
+        label.attributedText = labelString
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
         label.isHidden = true
@@ -73,6 +87,23 @@ public class PurchaseController: UIViewController {
         picker.delegate = self
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
+    }()
+    
+    private lazy var priceCollectionView: UICollectionView = {
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 16)
+        layout.itemSize = CGSize(width: (self.view.bounds.width - 90)/3, height: 50)
+        layout.scrollDirection = .horizontal
+
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+                
+        collectionView.register(PriceCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        return collectionView
     }()
     
     private lazy var purchaseButton: UIButton = {
@@ -130,74 +161,46 @@ public class PurchaseController: UIViewController {
         self.view.backgroundColor = purchaseConfig.backgroundColor
         self.view.addSubview(visualImageView)
         self.view.addSubview(statementLabel)
-        self.view.addSubview(pricePickerView)
+        self.view.addSubview(priceCollectionView)
         self.view.addSubview(purchaseButton)
         self.view.addSubview(secondaryButton)
         self.view.addSubview(activityIndicator)
         
+        self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
+        self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        
         if #available(iOS 11.0, *) {
-            self.activityIndicator.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 0).isActive = true
-            self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            self.activityIndicator.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-            
             self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-            self.visualImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-            self.visualImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-            self.visualImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
-                    
-            self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
-            self.statementLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-            self.statementLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-            self.statementLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
-
-            self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
-            self.pricePickerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-            self.pricePickerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-            self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
-            
-            self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
-            self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.purchaseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
-            
-            self.secondaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
-            self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.secondaryButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+            self.secondaryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
         } else {
-            self.activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
-            self.activityIndicator.widthAnchor.constraint(equalToConstant: 50).isActive = true
-            self.activityIndicator.heightAnchor.constraint(equalToConstant: 50).isActive = true
-            self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-            
             self.visualImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
-            self.visualImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-            self.visualImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-            self.visualImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
-                    
-            self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
-            self.statementLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-            self.statementLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-            self.statementLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
-
-            self.pricePickerView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 8).isActive = true
-            self.pricePickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-            self.pricePickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-            self.pricePickerView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -16).isActive = true
-            
-            self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
-            self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.purchaseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-            
-            self.secondaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
-            self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.secondaryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+            self.secondaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
         }
         
+        self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
+        self.statementLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        self.statementLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+
+        self.priceCollectionView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 24).isActive = true
+        self.priceCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        self.priceCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        self.priceCollectionView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.priceCollectionView.bottomAnchor.constraint(lessThanOrEqualTo: purchaseButton.topAnchor, constant: -40).isActive = true
         
+        self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -16).isActive = true
+        self.purchaseButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.purchaseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        self.purchaseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        
+        self.visualImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        self.visualImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        self.visualImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+        
+        self.secondaryButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        self.secondaryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
     }
     
     private func loadPurchases() {
@@ -223,11 +226,17 @@ public class PurchaseController: UIViewController {
                 
                 self.prices = prices
                 
-                self.productChosen = self.products.first
+                if self.products.count > 1 {
+                    self.productChosen = self.products[1]
+                } else if let firts = self.products.first {
+                    self.productChosen = firts
+                }
                 
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
+                    self.priceCollectionView.reloadData()
                     self.pricePickerView.reloadAllComponents()
+                    self.visualImageView.isHidden = false
                     self.statementLabel.isHidden = false
                     self.purchaseButton.isHidden = false
                     self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
@@ -240,7 +249,6 @@ public class PurchaseController: UIViewController {
             }
         }
     }
-    
     
     @objc private func pop() {
         self.navigationController?.popViewController(animated: true)
@@ -318,6 +326,51 @@ public class PurchaseController: UIViewController {
     
 }
 
+// MARK: - UITableViewDelegate & UITableViewDataSource
+
+extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSource  {
+    
+    var chosenProductIndex: Int {
+        guard let productChosen = productChosen,
+            let index = products.firstIndex(of: productChosen) else {
+            return 0
+        }
+        
+        return index
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return prices.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PriceCollectionViewCell
+        
+        cell.textLabel.text = prices[indexPath.item]
+        if chosenProductIndex == indexPath.item {
+            cell.textLabel.textColor = purchaseConfig.purchaseButtonTitleColor
+            cell.textLabel.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+            cell.textLabel.layer.borderColor = purchaseConfig.purchaseButtonBackgroundColor.cgColor
+        } else {
+            cell.textLabel.textColor = purchaseConfig.statementLabelColor
+            cell.textLabel.backgroundColor = purchaseConfig.backgroundColor
+            cell.textLabel.layer.borderColor = purchaseConfig.statementLabelColor.cgColor
+        }
+        
+        return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if products.count > indexPath.item {
+            productChosen = products[indexPath.item]
+            collectionView.reloadData()
+        } else {
+            productChosen = nil
+        }
+    }
+    
+}
+
 // MARK: - UIPickerViewDelegate & UIPickerViewDataSource
 
 extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
@@ -329,7 +382,6 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return prices.count
     }
-    
     
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         var pickerLabel = view as? UILabel;
@@ -346,8 +398,6 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
         
         return pickerLabel!;
     }
-    
-    
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
@@ -367,7 +417,4 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
         return 36.0
     }
     
-    
 }
-
-

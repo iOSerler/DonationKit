@@ -20,7 +20,9 @@ public struct PurchaseConfiguration {
     /// Statement
     let statementImage: UIImage?
     let statementLabelText: String
+    let highlightedLabelText: String?
     let statementLabelFont: UIFont
+    let highlightedLabelFont: UIFont
     let statementLabelColor: UIColor
     
     /// Purchase Button
@@ -61,7 +63,9 @@ public struct PurchaseConfiguration {
         
         statementImage: UIImage? = nil,
         statementLabelText: String =  "Please support us by donating!",
+        highlightedLabelText: String? = nil,
         statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
+        highlightedLabelFont: UIFont = UIFont.boldSystemFont(ofSize: 23),
         statementLabelColor: UIColor = .black,
         
         purchaseButtonTitle: String =  "Donate",
@@ -95,7 +99,9 @@ public struct PurchaseConfiguration {
         
         self.statementImage = statementImage
         self.statementLabelText = statementLabelText
+        self.highlightedLabelText = highlightedLabelText
         self.statementLabelFont = statementLabelFont
+        self.highlightedLabelFont = highlightedLabelFont
         self.statementLabelColor = statementLabelColor
                 
         self.purchaseButtonTitle = purchaseButtonTitle
