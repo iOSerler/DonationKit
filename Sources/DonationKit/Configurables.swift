@@ -1,19 +1,15 @@
 //
-//  BonusSystem.swift
-//  namaz
+//  File.swift
+//  
 //
-//  Created by Daniya on 07/09/2021.
-//  Copyright © 2021 Nursultan Askarbekuly. All rights reserved.
+//  Created by Daniya on 10/02/2022.
 //
 
-import Foundation
 import UIKit
 
-public struct PurchaseConfiguration {
+public struct PurchaseConfigurables {
     
-    let id: String
-    let purchaseProductIdentifiers: [ProductIdentifier]
-    
+    let configID: String
     let title: String
     let backgroundColor: UIColor
     
@@ -56,8 +52,7 @@ public struct PurchaseConfiguration {
     let purchaseIdForHistory: String?
     
     public init(
-        id: String = "",
-        purchaseProductIdentifiers: [ProductIdentifier],
+        configID: String = "",
         title: String = "Donation",
         backgroundColor: UIColor = .white,
         
@@ -91,9 +86,7 @@ public struct PurchaseConfiguration {
         secondaryAction: (() -> Void)? = nil,
         purchaseIdForHistory: String? = nil
     ) {
-        self.id = id
-        self.purchaseProductIdentifiers = purchaseProductIdentifiers
-        
+        self.configID = configID
         self.title = title
         self.backgroundColor = backgroundColor
         
@@ -127,5 +120,4 @@ public struct PurchaseConfiguration {
         self.secondaryAction = secondaryAction
         self.purchaseIdForHistory = purchaseIdForHistory
     }
-    
 }

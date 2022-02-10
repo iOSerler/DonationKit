@@ -1,5 +1,5 @@
 //
-//  IAPHelper.swift
+//  PurchaseService.swift
 //
 //  Created by Nursultan Askarbekuly on 6/20/18.
 //  Copyright © 2018 Nursultan Askarbekuly. All rights reserved.
@@ -10,7 +10,7 @@ import StoreKit
 public typealias ProductIdentifier = String
 internal typealias ProductsRequestCompletionHandler = (_ success: Bool, _ products: [SKProduct]?) -> ()
 
-internal class IAPHelper : NSObject  {
+internal class PurchaseService : NSObject  {
     
     static let IAPHelperPurchaseNotification = "IAPHelperPurchaseNotification"
     static let IAPHelperFailureNotification = "IAPHelperFailureNotification"
@@ -35,7 +35,7 @@ internal class IAPHelper : NSObject  {
 
 // MARK: - StoreKit API
 
-extension IAPHelper {
+extension PurchaseService {
     
     func requestProducts(completionHandler: @escaping ProductsRequestCompletionHandler) {
         productsRequest?.cancel()
@@ -67,7 +67,7 @@ extension IAPHelper {
 
 // MARK: - SKProductsRequestDelegate
 
-extension IAPHelper: SKProductsRequestDelegate {
+extension PurchaseService: SKProductsRequestDelegate {
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         let products = response.products
@@ -92,7 +92,7 @@ extension IAPHelper: SKProductsRequestDelegate {
 
 // MARK: - SKPaymentTransactionObserver
 
-extension IAPHelper: SKPaymentTransactionObserver {
+extension PurchaseService: SKPaymentTransactionObserver {
     
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
@@ -150,12 +150,12 @@ extension IAPHelper: SKPaymentTransactionObserver {
         purchasedProductIdentifiers.insert(identifier)
         UserDefaults.standard.set(true, forKey: identifier)
         UserDefaults.standard.synchronize()
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: IAPHelper.IAPHelperPurchaseNotification), object: identifier)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: PurchaseService.IAPHelperPurchaseNotification), object: identifier)
     }
     
     private func deliverFailureNotificationFor(identifier: String?) {
         guard let identifier = identifier else { return }
         
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: IAPHelper.IAPHelperFailureNotification), object: identifier)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: PurchaseService.IAPHelperFailureNotification), object: identifier)
     }
 }

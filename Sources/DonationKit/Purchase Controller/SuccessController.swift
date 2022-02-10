@@ -10,15 +10,12 @@ import StoreKit
 
 public class SuccessController: UIViewController {
         
-    private let purchaseConfig: PurchaseConfiguration
-    private let analytics: AbstractAnalytics?
+    private let purchasePresenter: PurchasePresenter
     
     private var wasNavigationBarHidden: Bool = false
     
-    public init(purchaseConfig: PurchaseConfiguration, analytics: AbstractAnalytics? = nil) {
-        self.purchaseConfig = purchaseConfig
-        self.analytics = analytics
-        
+    public init(presenter: PurchasePresenter) {
+        self.purchasePresenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -30,7 +27,7 @@ public class SuccessController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = purchaseConfig.successImage
+        imageView.image = purchasePresenter.config.successImage
         return imageView
     }()
     
@@ -39,9 +36,9 @@ public class SuccessController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
-        label.text = purchaseConfig.successLabelText
-        label.font = purchaseConfig.statementLabelFont
-        label.textColor = purchaseConfig.statementLabelColor
+        label.text = purchasePresenter.config.successLabelText
+        label.font = purchasePresenter.config.statementLabelFont
+        label.textColor = purchasePresenter.config.statementLabelColor
         
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
@@ -51,17 +48,12 @@ public class SuccessController: UIViewController {
     private lazy var proceedButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(purchaseConfig.successButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchaseConfig.purchaseButtonFont
-        button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+        button.setTitle(purchasePresenter.config.successButtonTitle, for: UIControl.State())
+        button.titleLabel?.font = purchasePresenter.config.purchaseButtonFont
+        button.setTitleColor(purchasePresenter.config.purchaseButtonTitleColor, for: .normal)
+        button.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
         button.layer.cornerRadius = 5
-        
-        if let _ = purchaseConfig.successAction {
-            button.addTarget(self, action: #selector(proceedToSuccesAction), for: .touchUpInside)
-        } else {
-            button.addTarget(self, action: #selector(pop), for: .touchUpInside)
-        }
+        button.addTarget(self, action: #selector(proceedButtonPressed), for: .touchUpInside)
         
         return button
     }()
@@ -86,8 +78,8 @@ public class SuccessController: UIViewController {
     private func setupViews() {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
-        self.title = purchaseConfig.title
-        self.view.backgroundColor = purchaseConfig.backgroundColor
+        self.title = purchasePresenter.config.title
+        self.view.backgroundColor = purchasePresenter.config.backgroundColor
         self.view.addSubview(successImageView)
         self.view.addSubview(successLabel)
         self.view.addSubview(proceedButton)
@@ -125,7 +117,7 @@ public class SuccessController: UIViewController {
         }
         
         
-        if purchaseConfig.isSuccessImagePulsating {
+        if purchasePresenter.config.isSuccessImagePulsating {
             let scaleAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
             scaleAnimation.duration = 1.0
             scaleAnimation.repeatCount = 3.0
@@ -136,12 +128,12 @@ public class SuccessController: UIViewController {
         }
     }
     
-    @objc private func pop() {
+    func pop() {
         self.navigationController?.popToRootViewController(animated: true)
     }
     
-    @objc private func proceedToSuccesAction() {
-        purchaseConfig.successAction?()
+    @objc private func proceedButtonPressed() {
+        purchasePresenter.doSuccessAction()
     }
     
 }

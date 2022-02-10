@@ -7,34 +7,19 @@
 
 
 import UIKit
-import StoreKit
 
 public class PurchaseController: UIViewController {
         
-    private let purchaseConfig: PurchaseConfiguration
-    private let analytics: AbstractAnalytics?
+    private let purchasePresenter: PurchasePresenter
     
-    public init(purchaseConfig: PurchaseConfiguration, analytics: AbstractAnalytics? = nil) {
-        self.purchaseConfig = purchaseConfig
-        self.analytics = analytics
+    public init(presenter: PurchasePresenter) {
+        self.purchasePresenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private static let priceFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.formatterBehavior = .behavior10_4
-        formatter.numberStyle = .currency
-        return formatter
-    }()
-    
-    private lazy var prices: [String] = []
-    private var products = [SKProduct]()
-    
-    private var productChosen: SKProduct?
     
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -47,7 +32,7 @@ public class PurchaseController: UIViewController {
     private lazy var visualImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = purchaseConfig.statementImage
+        imageView.image = purchasePresenter.config.statementImage
         imageView.contentMode = .scaleAspectFit
         imageView.isHidden = true
         return imageView
@@ -58,17 +43,17 @@ public class PurchaseController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
-        let labelString = NSMutableAttributedString(string: purchaseConfig.statementLabelText, attributes: [
-            NSAttributedString.Key.font : purchaseConfig.statementLabelFont,
-            NSAttributedString.Key.foregroundColor : purchaseConfig.statementLabelColor,
+        let labelString = NSMutableAttributedString(string: purchasePresenter.config.statementLabelText, attributes: [
+            NSAttributedString.Key.font : purchasePresenter.config.statementLabelFont,
+            NSAttributedString.Key.foregroundColor : purchasePresenter.config.statementLabelColor,
             
         ])
         
-        if let highlightedText = purchaseConfig.highlightedLabelText {
+        if let highlightedText = purchasePresenter.config.highlightedLabelText {
             
             let boldString = NSMutableAttributedString(string: highlightedText, attributes: [
-                NSAttributedString.Key.font : purchaseConfig.highlightedLabelFont,
-                NSAttributedString.Key.foregroundColor : purchaseConfig.statementLabelColor,
+                NSAttributedString.Key.font : purchasePresenter.config.highlightedLabelFont,
+                NSAttributedString.Key.foregroundColor : purchasePresenter.config.statementLabelColor,
                 
             ])
             labelString.append(boldString)
@@ -109,10 +94,10 @@ public class PurchaseController: UIViewController {
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(purchaseConfig.purchaseButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchaseConfig.purchaseButtonFont
-        button.setTitleColor(purchaseConfig.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
+        button.setTitle(purchasePresenter.config.purchaseButtonTitle, for: UIControl.State())
+        button.titleLabel?.font = purchasePresenter.config.purchaseButtonFont
+        button.setTitleColor(purchasePresenter.config.purchaseButtonTitleColor, for: .normal)
+        button.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
         button.layer.cornerRadius = 5
 
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
@@ -125,18 +110,12 @@ public class PurchaseController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.isHidden = purchaseConfig.isSecondaryButtonHidden
-        button.setTitle(purchaseConfig.secondaryButtonTitle, for: UIControl.State())
-        button.backgroundColor = purchaseConfig.secondaryButtonBackgroundColor
-        button.setTitleColor(purchaseConfig.secondaryButtonTitleColor, for: .normal)
-        button.titleLabel?.font = purchaseConfig.secondaryButtonFont
-        
-        if let _ = purchaseConfig.secondaryAction {
-            button.addTarget(self, action: #selector(proceedToSecondaryButtonAction), for: .touchUpInside)
-        } else {
-            button.addTarget(self, action: #selector(pop), for: .touchUpInside)
-        }
-        
+        button.isHidden = purchasePresenter.config.isSecondaryButtonHidden
+        button.setTitle(purchasePresenter.config.secondaryButtonTitle, for: UIControl.State())
+        button.backgroundColor = purchasePresenter.config.secondaryButtonBackgroundColor
+        button.setTitleColor(purchasePresenter.config.secondaryButtonTitleColor, for: .normal)
+        button.titleLabel?.font = purchasePresenter.config.secondaryButtonFont
+        button.addTarget(self, action: #selector(secondaryButtonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -144,21 +123,14 @@ public class PurchaseController: UIViewController {
         super.viewDidLoad()
                 
         setupViews()
-        loadPurchases()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PurchaseController.handlePurchaseNotification(_:)),
-                                               name: NSNotification.Name(rawValue: IAPHelper.IAPHelperPurchaseNotification),
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(PurchaseController.handleFailueNotification(_:)),
-        name: NSNotification.Name(rawValue: IAPHelper.IAPHelperFailureNotification),
-        object: nil)
     }
     
     private func setupViews() {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
-        self.title = purchaseConfig.title
-        self.view.backgroundColor = purchaseConfig.backgroundColor
+        self.title = purchasePresenter.config.title
+        self.view.backgroundColor = purchasePresenter.config.backgroundColor
         self.view.addSubview(visualImageView)
         self.view.addSubview(statementLabel)
         self.view.addSubview(priceCollectionView)
@@ -203,90 +175,30 @@ public class PurchaseController: UIViewController {
         self.secondaryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
     }
     
-    private func loadPurchases() {
+    func startLoadingAnimation() {
         activityIndicator.startAnimating()
-        
-        IAPProducts.purchaseProductIdentifiers = Set(purchaseConfig.purchaseProductIdentifiers)
-        IAPProducts.purchaseStore.requestProducts{success, productArray in
-                        
-            if success {
-                
-                self.products = productArray!.sorted { Int(truncating: $0.price) < Int(truncating: $1.price) }
-                
-                var prices: [String] = []
-                
-                for product in self.products {
-                    if IAPHelper.canMakePayments() {
-                        PurchaseController.priceFormatter.locale = product.priceLocale
-                        prices.append("\(PurchaseController.priceFormatter.string(from: product.price)!)")
-                    } else {
-                        //not available for purchse
-                    }
-                }
-                
-                self.prices = prices
-                
-                if self.products.count > 1 {
-                    self.productChosen = self.products[1]
-                } else if let firts = self.products.first {
-                    self.productChosen = firts
-                }
-                
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                    self.priceCollectionView.reloadData()
-                    self.pricePickerView.reloadAllComponents()
-                    self.visualImageView.isHidden = false
-                    self.statementLabel.isHidden = false
-                    self.purchaseButton.isHidden = false
-                    self.secondaryButton.isHidden = self.purchaseConfig.isSecondaryButtonHidden
-                }
-                
-            } else {
-                DispatchQueue.main.async {
-                    self.activityIndicator.stopAnimating()
-                }
-            }
-        }
     }
     
-    @objc private func pop() {
-        self.navigationController?.popViewController(animated: true)
+    func stopLoadingAnimation() {
+        activityIndicator.stopAnimating()
+    }
+    
+    func showPurchaseViews() {
+        self.priceCollectionView.reloadData()
+        self.pricePickerView.reloadAllComponents()
+        self.visualImageView.isHidden = false
+        self.statementLabel.isHidden = false
+        self.purchaseButton.isHidden = false
+        self.secondaryButton.isHidden = self.purchasePresenter.config.isSecondaryButtonHidden
     }
 
-    @objc private func handlePurchaseNotification(_ notification: Notification) {
-        
-        self.activityIndicator.stopAnimating()
-        self.analytics?.logEvent("Purchase Made", properties: [
-            "price": productChosen!.price,
-            "configuration": purchaseConfig.id
-        ])
-        
-        PurchaseHistory.markPurchase(purchaseConfig.purchaseIdForHistory)
-        
-        self.navigationController?.pushViewController(SuccessController(purchaseConfig: purchaseConfig, analytics: analytics), animated: true)
-    }
-    
-    @objc private func handleFailueNotification(_ notification: Notification) {
-           
-        guard let _ = productChosen else {
-            /// false shots
-            return
-        }
-        
-        self.activityIndicator.stopAnimating()
-        
-        if let identified = notification.object as? String, identified == "none" {
-            /// purchase got canceled by user
-            return
-        }
-        
+    func showFailureViews() {
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
             self.statementLabel.alpha = 0
         }) { _ in
-            self.statementLabel.text = self.purchaseConfig.purchaseFailedText
-            self.purchaseButton.setTitle(self.purchaseConfig.tryAgainButtonTitle, for: .normal)
+            self.statementLabel.text = self.purchasePresenter.config.purchaseFailedText
+            self.purchaseButton.setTitle(self.purchasePresenter.config.tryAgainButtonTitle, for: .normal)
             UIView.animate(withDuration: 0.2, delay: 0.2, animations: {
                 self.statementLabel.alpha = 1
                 self.purchaseButton.alpha = 1
@@ -295,78 +207,51 @@ public class PurchaseController: UIViewController {
     }
     
     @objc private func purchaseButtonPressed(_ sender: AnyObject) {
-        
-        if activityIndicator.isAnimating {
-            return
-        }
-        
-        activityIndicator.startAnimating()
-        
-        guard let product = productChosen else {
-            activityIndicator.stopAnimating()
-            pop()
-            return
-        }
-        
-        self.analytics?.logEvent("Purchase Attempt", properties: [
-            "price": product.price,
-            "configuration": purchaseConfig.id
-        ])
-        IAPProducts.purchaseStore.buyProduct(product)
+        purchasePresenter.makePurchase()
     }
     
-    @objc private func proceedToSuccesAction() {
-        purchaseConfig.successAction?()
+    @objc private func secondaryButtonPressed() {
+        purchasePresenter.doSecondaryAction()
     }
     
-    @objc private func proceedToSecondaryButtonAction() {
-        purchaseConfig.secondaryAction?()
+    func showSuccessController() {
+        
+        self.navigationController?.pushViewController(SuccessController(presenter: purchasePresenter), animated: true)
     }
     
-    
+    func pop() {
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 // MARK: - UITableViewDelegate & UITableViewDataSource
 
 extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSource  {
     
-    var chosenProductIndex: Int {
-        guard let productChosen = productChosen,
-            let index = products.firstIndex(of: productChosen) else {
-            return 0
-        }
-        
-        return index
-    }
-    
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return prices.count
+        return purchasePresenter.prices.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PriceCollectionViewCell
         
-        cell.textLabel.text = prices[indexPath.item]
-        if chosenProductIndex == indexPath.item {
-            cell.textLabel.textColor = purchaseConfig.purchaseButtonTitleColor
-            cell.textLabel.backgroundColor = purchaseConfig.purchaseButtonBackgroundColor
-            cell.textLabel.layer.borderColor = purchaseConfig.purchaseButtonBackgroundColor.cgColor
+        cell.textLabel.text = purchasePresenter.prices[indexPath.item]
+        if purchasePresenter.chosenProductIndex == indexPath.item {
+            cell.textLabel.textColor = purchasePresenter.config.purchaseButtonTitleColor
+            cell.textLabel.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
+            cell.textLabel.layer.borderColor = purchasePresenter.config.purchaseButtonBackgroundColor.cgColor
         } else {
-            cell.textLabel.textColor = purchaseConfig.statementLabelColor
-            cell.textLabel.backgroundColor = purchaseConfig.backgroundColor
-            cell.textLabel.layer.borderColor = purchaseConfig.statementLabelColor.cgColor
+            cell.textLabel.textColor = purchasePresenter.config.statementLabelColor
+            cell.textLabel.backgroundColor = purchasePresenter.config.backgroundColor
+            cell.textLabel.layer.borderColor = purchasePresenter.config.statementLabelColor.cgColor
         }
         
         return cell
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if products.count > indexPath.item {
-            productChosen = products[indexPath.item]
-            collectionView.reloadData()
-        } else {
-            productChosen = nil
-        }
+        purchasePresenter.choosePrice(at: indexPath.item)
+        collectionView.reloadData()
     }
     
 }
@@ -380,7 +265,7 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
     }
     
     public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return prices.count
+        return purchasePresenter.prices.count
     }
     
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
@@ -394,18 +279,14 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
             pickerLabel?.textAlignment = NSTextAlignment.center
         }
         
-        pickerLabel?.text = prices[row]
+        pickerLabel?.text = purchasePresenter.prices[row]
         
         return pickerLabel!;
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        if products.count > row {
-            productChosen = products[row]
-        } else {
-            productChosen = nil
-        }
+        purchasePresenter.choosePrice(at: row)
         
     }
     

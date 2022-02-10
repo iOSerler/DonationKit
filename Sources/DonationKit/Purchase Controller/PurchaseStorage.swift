@@ -1,5 +1,5 @@
 //
-//  PurchaseHistory.swift
+//  PurchaseStorage.swift
 //
 //  Created by Daniya on 04/11/2021.
 //  Copyright © 2021 Nursultan Askarbekuly. All rights reserved.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-public struct PurchaseHistory {
+public struct PurchaseStorage {
         
-    public static func markPurchase(_ purchaseId: String?) {
+    public static func savePurchase(_ purchaseId: String?) {
 
         if let purchaseId = purchaseId {
             /// mark purchase with the custom user passed id
