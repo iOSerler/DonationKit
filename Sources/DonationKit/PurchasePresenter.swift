@@ -50,7 +50,7 @@ public class PurchasePresenter {
         NotificationCenter.default.addObserver(self, selector: #selector(handleFailueNotification(_:)), name: NSNotification.Name(rawValue: PurchaseService.IAPHelperFailureNotification), object: nil)
     }
     
-    func setViewDelegate(viewDelegate: PurchaseViewDelegate?){
+    func setViewDelegate(viewDelegate: PurchaseViewDelegate){
         self.viewDelegate = viewDelegate
     }
     

@@ -120,10 +120,10 @@ public class SuccessController: UIViewController {
         if purchasePresenter.config.isSuccessImagePulsating {
             let scaleAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
             scaleAnimation.duration = 1.0
-            scaleAnimation.repeatCount = 3.0
+            scaleAnimation.repeatCount = 1.0
             scaleAnimation.autoreverses = true
             scaleAnimation.fromValue = 1.0;
-            scaleAnimation.toValue = 1.15;
+            scaleAnimation.toValue = 1.10;
             self.successImageView.layer.add(scaleAnimation, forKey: "scale")
         }
     }

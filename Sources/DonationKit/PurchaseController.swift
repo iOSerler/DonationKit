@@ -15,6 +15,7 @@ public class PurchaseController: UIViewController {
     public init(presenter: PurchasePresenter) {
         self.purchasePresenter = presenter
         super.init(nibName: nil, bundle: nil)
+        self.purchasePresenter.setViewDelegate(viewDelegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -223,7 +224,7 @@ extension PurchaseController: PurchaseViewDelegate {
     }
     
     func pop() {
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 }
 
