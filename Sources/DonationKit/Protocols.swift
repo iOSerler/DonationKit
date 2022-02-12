@@ -12,3 +12,12 @@ public protocol AbstractAnalytics {
     func logEvent(_ eventName: String, properties: [String:Any]?)
     func setUserProperty(_ property: String, value: Any)
 }
+
+protocol PurchaseViewDelegate: AnyObject {
+    func startLoadingAnimation()
+    func stopLoadingAnimation()
+    func showPurchaseViews()
+    func showFailureViews()
+    func showSuccessController()
+    func pop()
+}

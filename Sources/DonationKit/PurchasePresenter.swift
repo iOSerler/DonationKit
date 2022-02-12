@@ -12,13 +12,12 @@ import StoreKit
 
 public class PurchasePresenter {
     
-    weak private var purchaseViewDelegate: PurchaseController?
-    weak private var successViewDelegate: SuccessController?
+    weak private var viewDelegate: PurchaseViewDelegate?
     
     private var purchaseStore: PurchaseService?
     private let analytics: AbstractAnalytics?
     
-    public var config = PurchaseConfigurables()
+    public var config = PurchaseConfigurable()
     var prices: [String] = []
 
     private var products = [SKProduct]()
@@ -36,7 +35,7 @@ public class PurchasePresenter {
     
     public init(analytics: AbstractAnalytics? = nil,
                 purchaseProductIdentifiers: [ProductIdentifier],
-                config: PurchaseConfigurables? = nil) {
+                config: PurchaseConfigurable? = nil) {
         self.analytics = analytics
         self.purchaseStore = PurchaseService(productIds: Set(purchaseProductIdentifiers))
         
@@ -51,17 +50,13 @@ public class PurchasePresenter {
         NotificationCenter.default.addObserver(self, selector: #selector(handleFailueNotification(_:)), name: NSNotification.Name(rawValue: PurchaseService.IAPHelperFailureNotification), object: nil)
     }
     
-    func setPurchaseViewDelegate(purchaseViewDelegate: PurchaseController?){
-        self.purchaseViewDelegate = purchaseViewDelegate
-    }
-    
-    func setSuccessViewDelegate(successViewDelegate: SuccessController?){
-        self.successViewDelegate = successViewDelegate
+    func setViewDelegate(viewDelegate: PurchaseViewDelegate?){
+        self.viewDelegate = viewDelegate
     }
     
     private func loadPurchases() {
         
-        purchaseViewDelegate?.startLoadingAnimation()
+        viewDelegate?.startLoadingAnimation()
         purchaseStore?.requestProducts{ [self] success, productArray in
                         
             if success {
@@ -92,14 +87,14 @@ public class PurchasePresenter {
                 }
                 
                 DispatchQueue.main.async {
-                    self.purchaseViewDelegate?.stopLoadingAnimation()
+                    self.viewDelegate?.stopLoadingAnimation()
                     self.isProcessingRequest = false
-                    self.purchaseViewDelegate?.showPurchaseViews()
+                    self.viewDelegate?.showPurchaseViews()
                 }
                 
             } else {
                 DispatchQueue.main.async {
-                    self.purchaseViewDelegate?.stopLoadingAnimation()
+                    self.viewDelegate?.stopLoadingAnimation()
                     self.isProcessingRequest = false
                 }
             }
@@ -119,11 +114,11 @@ public class PurchasePresenter {
             return
         }
         
-        self.purchaseViewDelegate?.startLoadingAnimation()
+        self.viewDelegate?.startLoadingAnimation()
 
         guard let product = productChosen else {
-            self.purchaseViewDelegate?.stopLoadingAnimation()
-            self.purchaseViewDelegate?.pop()
+            self.viewDelegate?.stopLoadingAnimation()
+            self.viewDelegate?.pop()
             return
         }
         
@@ -144,7 +139,8 @@ public class PurchasePresenter {
         if let _ = config.successAction {
             config.successAction?()
         } else {
-            successViewDelegate?.pop()
+            /// FIXME: has to be success controller
+            viewDelegate?.pop()
         }
     }
     
@@ -156,13 +152,13 @@ public class PurchasePresenter {
         if let _ = config.secondaryAction {
             config.secondaryAction?()
         } else {
-            purchaseViewDelegate?.pop()
+            viewDelegate?.pop()
         }
     }
     
     @objc private func handlePurchaseNotification(_ notification: Notification) {
         
-        self.purchaseViewDelegate?.stopLoadingAnimation()
+        self.viewDelegate?.stopLoadingAnimation()
         self.isProcessingRequest = false
         self.analytics?.logEvent("Purchase Made", properties: [
             "price": productChosen!.price,
@@ -170,7 +166,7 @@ public class PurchasePresenter {
         ])
         
         PurchaseStorage.savePurchase(config.purchaseIdForHistory)
-        purchaseViewDelegate?.showSuccessController()
+        viewDelegate?.showSuccessController()
     }
     
     @objc private func handleFailueNotification(_ notification: Notification) {
@@ -180,7 +176,7 @@ public class PurchasePresenter {
             return
         }
         
-        self.purchaseViewDelegate?.stopLoadingAnimation()
+        self.viewDelegate?.stopLoadingAnimation()
         self.isProcessingRequest = false
         
         if let identified = notification.object as? String, identified == "none" {
@@ -188,7 +184,7 @@ public class PurchasePresenter {
             return
         }
         
-        purchaseViewDelegate?.showFailureViews()
+        viewDelegate?.showFailureViews()
     }
     
     

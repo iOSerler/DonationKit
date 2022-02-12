@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  PurchaseConfigurable.swift
 //  
 //
 //  Created by Daniya on 10/02/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct PurchaseConfigurables {
+public struct PurchaseConfigurable {
     
     let configID: String
     let title: String

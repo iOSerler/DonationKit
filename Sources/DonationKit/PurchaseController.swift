@@ -175,6 +175,18 @@ public class PurchaseController: UIViewController {
         self.secondaryButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
     }
     
+    @objc private func purchaseButtonPressed(_ sender: AnyObject) {
+        purchasePresenter.makePurchase()
+    }
+    
+    @objc private func secondaryButtonPressed() {
+        purchasePresenter.doSecondaryAction()
+    }
+    
+}
+
+extension PurchaseController: PurchaseViewDelegate {
+    
     func startLoadingAnimation() {
         activityIndicator.startAnimating()
     }
@@ -206,16 +218,7 @@ public class PurchaseController: UIViewController {
         }
     }
     
-    @objc private func purchaseButtonPressed(_ sender: AnyObject) {
-        purchasePresenter.makePurchase()
-    }
-    
-    @objc private func secondaryButtonPressed() {
-        purchasePresenter.doSecondaryAction()
-    }
-    
     func showSuccessController() {
-        
         self.navigationController?.pushViewController(SuccessController(presenter: purchasePresenter), animated: true)
     }
     
