@@ -188,15 +188,15 @@ public class PurchaseController: UIViewController {
 
 extension PurchaseController: PurchaseViewDelegate {
     
-    func startLoadingAnimation() {
+    public func startLoadingAnimation() {
         activityIndicator.startAnimating()
     }
     
-    func stopLoadingAnimation() {
+    public func stopLoadingAnimation() {
         activityIndicator.stopAnimating()
     }
     
-    func showPurchaseViews() {
+    public func showPurchaseViews() {
         self.priceCollectionView.reloadData()
         self.pricePickerView.reloadAllComponents()
         self.visualImageView.isHidden = false
@@ -205,7 +205,7 @@ extension PurchaseController: PurchaseViewDelegate {
         self.secondaryButton.isHidden = self.purchasePresenter.config.isSecondaryButtonHidden
     }
 
-    func showFailureViews() {
+    public func showFailureViews() {
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
             self.statementLabel.alpha = 0
@@ -219,11 +219,11 @@ extension PurchaseController: PurchaseViewDelegate {
         }
     }
     
-    func showSuccessController() {
+    public func showSuccessController() {
         self.navigationController?.pushViewController(SuccessController(presenter: purchasePresenter), animated: true)
     }
     
-    func pop() {
+    public func pop() {
         self.navigationController?.popToRootViewController(animated: true)
     }
 }

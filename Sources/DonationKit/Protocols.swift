@@ -13,7 +13,7 @@ public protocol AbstractAnalytics {
     func setUserProperty(_ property: String, value: Any)
 }
 
-protocol PurchaseViewDelegate: AnyObject {
+public protocol PurchaseViewDelegate: AnyObject {
     func startLoadingAnimation()
     func stopLoadingAnimation()
     func showPurchaseViews()
