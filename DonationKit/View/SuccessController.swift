@@ -9,7 +9,7 @@ import UIKit
 import StoreKit
 
 public class SuccessController: UIViewController {
-        
+    
     private let purchasePresenter: PurchasePresenter
     
     private var wasNavigationBarHidden: Bool = false
@@ -27,7 +27,7 @@ public class SuccessController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = purchasePresenter.config.successImage
+        imageView.image = UIImage(named: purchasePresenter.config.successImageName)
         return imageView
     }()
     
@@ -37,8 +37,15 @@ public class SuccessController: UIViewController {
         label.numberOfLines = 0
         
         label.text = purchasePresenter.config.successLabelText
-        label.font = purchasePresenter.config.statementLabelFont
-        label.textColor = purchasePresenter.config.statementLabelColor
+        
+        if purchasePresenter.config.statementLabelFontName.isEmpty {
+            label.font = UIFont.systemFont(ofSize: purchasePresenter.config.statementLabelFontSize)
+        } else {
+            label.font = UIFont(name: purchasePresenter.config.statementLabelFontName, size: purchasePresenter.config.statementLabelFontSize)
+        }
+        
+        label.textColor = UIColor(rgb: purchasePresenter.config.statementLabelHexColor)
+        
         
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
@@ -49,9 +56,19 @@ public class SuccessController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(purchasePresenter.config.successButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchasePresenter.config.purchaseButtonFont
-        button.setTitleColor(purchasePresenter.config.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
+        
+        if purchasePresenter.config.purchaseButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.purchaseButtonFontSize, weight: .semibold)
+        } else {
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.purchaseButtonFontName, size: purchasePresenter.config.purchaseButtonFontSize)
+        }
+        
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor), for: .normal)
+        
+        
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
+        
+        
         button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(proceedButtonPressed), for: .touchUpInside)
         
@@ -79,7 +96,8 @@ public class SuccessController: UIViewController {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
         self.title = purchasePresenter.config.title
-        self.view.backgroundColor = purchasePresenter.config.backgroundColor
+        self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
+        
         self.view.addSubview(successImageView)
         self.view.addSubview(successLabel)
         self.view.addSubview(proceedButton)
@@ -89,7 +107,7 @@ public class SuccessController: UIViewController {
             self.successImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
             self.successImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
             self.successImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.30).isActive = true
-                    
+            
             self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
             self.successLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
             self.successLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
@@ -104,7 +122,7 @@ public class SuccessController: UIViewController {
             self.successImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
             self.successImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
             self.successImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.30).isActive = true
-                    
+            
             self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
             self.successLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
             self.successLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true

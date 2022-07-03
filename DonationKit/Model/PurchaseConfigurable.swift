@@ -5,37 +5,38 @@
 //  Created by Daniya on 10/02/2022.
 //
 
-import UIKit
+import Foundation
 
 public struct PurchaseConfigurable {
     
     let configID: String
     let title: String
-    let backgroundColor: UIColor
+    let backgroundHexColor: Int
     
     /// Statement
-    let statementImage: UIImage?
+    let statementImageName: String
     let statementLabelText: String
-    let highlightedLabelText: String?
-    let statementLabelFont: UIFont
-    let highlightedLabelFont: UIFont
-    let statementLabelColor: UIColor
+    let statementLabelFontName: String
+    let statementLabelFontSize: CGFloat
+    let statementLabelHexColor: Int
     
     /// Purchase Button
     let purchaseButtonTitle: String
-    let purchaseButtonFont: UIFont
-    let purchaseButtonTitleColor: UIColor
-    let purchaseButtonBackgroundColor: UIColor
+    let purchaseButtonFontName: String
+    let purchaseButtonFontSize: CGFloat
+    let purchaseButtonTitleHexColor: Int
+    let purchaseButtonBackgroundHexColor: Int
     
     /// Secondary Action Title
     let isSecondaryButtonHidden: Bool
     let secondaryButtonTitle: String
-    let secondaryButtonFont: UIFont
-    let secondaryButtonTitleColor: UIColor
-    let secondaryButtonBackgroundColor: UIColor
+    let secondaryButtonFontName: String
+    let secondaryButtonFontSize: CGFloat
+    let secondaryButtonTitleHexColor: Int
+    let secondaryButtonBackgroundHexColor: Int
 
     /// Successful Purchase
-    let successImage: UIImage?
+    let successImageName: String
     let isSuccessImagePulsating: Bool
     let successLabelText: String
     let successButtonTitle: String
@@ -54,27 +55,28 @@ public struct PurchaseConfigurable {
     public init(
         configID: String = "",
         title: String = "Donation",
-        backgroundColor: UIColor = .white,
+        backgroundHexColor: Int = 0xFFFFFF,
         
-        statementImage: UIImage? = nil,
+        statementImageName: String = "",
         statementLabelText: String =  "Please support us by donating!",
-        highlightedLabelText: String? = nil,
-        statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
-        highlightedLabelFont: UIFont = UIFont.boldSystemFont(ofSize: 23),
-        statementLabelColor: UIColor = .black,
+        statementLabelFontName: String =  "",
+        statementLabelFontSize: CGFloat = 21,
+        statementLabelHexColor: Int = 0x000000,
         
         purchaseButtonTitle: String =  "Donate",
-        purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .semibold),
-        purchaseButtonTitleColor: UIColor  = .white,
-        purchaseButtonBackgroundColor: UIColor = .systemBlue,
+        purchaseButtonFontName: String =  "",
+        purchaseButtonFontSize: CGFloat = 19,
+        purchaseButtonTitleHexColor: Int = 0xFFFFFF,
+        purchaseButtonBackgroundHexColor: Int = 0x007FFF,
         
         isSecondaryButtonHidden: Bool = true,
         secondaryButtonTitle: String = "Skip",
-        secondaryButtonFont: UIFont = UIFont.systemFont(ofSize: 17, weight: .light),
-        secondaryButtonTitleColor: UIColor = .black,
-        secondaryButtonBackgroundColor: UIColor = .clear,
+        secondaryButtonFontName: String =  "",
+        secondaryButtonFontSize: CGFloat = 17,
+        secondaryButtonTitleHexColor: Int = 0x000000,
+        secondaryButtonBackgroundHexColor: Int = 0x0000FFFF,
         
-        successImage: UIImage? = nil,
+        successImageName: String = "",
         isSuccessImagePulsating: Bool = true,
         successLabelText: String =  "Thank you for your generosity!",
         successButtonTitle: String =  "You're welcome",
@@ -88,27 +90,28 @@ public struct PurchaseConfigurable {
     ) {
         self.configID = configID
         self.title = title
-        self.backgroundColor = backgroundColor
+        self.backgroundHexColor = backgroundHexColor
         
-        self.statementImage = statementImage
+        self.statementImageName = statementImageName
         self.statementLabelText = statementLabelText
-        self.highlightedLabelText = highlightedLabelText
-        self.statementLabelFont = statementLabelFont
-        self.highlightedLabelFont = highlightedLabelFont
-        self.statementLabelColor = statementLabelColor
+        self.statementLabelFontName = statementLabelFontName
+        self.statementLabelFontSize = statementLabelFontSize
+        self.statementLabelHexColor = statementLabelHexColor
                 
         self.purchaseButtonTitle = purchaseButtonTitle
-        self.purchaseButtonFont = purchaseButtonFont
-        self.purchaseButtonTitleColor = purchaseButtonTitleColor
-        self.purchaseButtonBackgroundColor = purchaseButtonBackgroundColor
+        self.purchaseButtonFontName = purchaseButtonFontName
+        self.purchaseButtonFontSize = purchaseButtonFontSize
+        self.purchaseButtonTitleHexColor = purchaseButtonTitleHexColor
+        self.purchaseButtonBackgroundHexColor = purchaseButtonBackgroundHexColor
         
         self.isSecondaryButtonHidden = isSecondaryButtonHidden
         self.secondaryButtonTitle = secondaryButtonTitle
-        self.secondaryButtonFont = secondaryButtonFont
-        self.secondaryButtonTitleColor = secondaryButtonTitleColor
-        self.secondaryButtonBackgroundColor = secondaryButtonBackgroundColor
+        self.secondaryButtonFontName = secondaryButtonFontName
+        self.secondaryButtonFontSize = secondaryButtonFontSize
+        self.secondaryButtonTitleHexColor = secondaryButtonTitleHexColor
+        self.secondaryButtonBackgroundHexColor = secondaryButtonBackgroundHexColor
         
-        self.successImage = successImage
+        self.successImageName = successImageName
         self.isSuccessImagePulsating = isSuccessImagePulsating
         self.successLabelText = successLabelText
         self.successButtonTitle = successButtonTitle

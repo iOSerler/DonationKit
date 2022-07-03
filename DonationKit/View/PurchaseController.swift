@@ -9,7 +9,7 @@
 import UIKit
 
 public class PurchaseController: UIViewController {
-        
+    
     private let purchasePresenter: PurchasePresenter
     
     public init(presenter: PurchasePresenter) {
@@ -33,7 +33,7 @@ public class PurchaseController: UIViewController {
     private lazy var visualImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = purchasePresenter.config.statementImage
+        imageView.image = UIImage(named: purchasePresenter.config.statementImageName)
         imageView.contentMode = .scaleAspectFit
         imageView.isHidden = true
         return imageView
@@ -44,23 +44,16 @@ public class PurchaseController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
-        let labelString = NSMutableAttributedString(string: purchasePresenter.config.statementLabelText, attributes: [
-            NSAttributedString.Key.font : purchasePresenter.config.statementLabelFont,
-            NSAttributedString.Key.foregroundColor : purchasePresenter.config.statementLabelColor,
-            
-        ])
-        
-        if let highlightedText = purchasePresenter.config.highlightedLabelText {
-            
-            let boldString = NSMutableAttributedString(string: highlightedText, attributes: [
-                NSAttributedString.Key.font : purchasePresenter.config.highlightedLabelFont,
-                NSAttributedString.Key.foregroundColor : purchasePresenter.config.statementLabelColor,
-                
-            ])
-            labelString.append(boldString)
+        if purchasePresenter.config.statementLabelFontName.isEmpty {
+            label.font = UIFont.systemFont(ofSize: purchasePresenter.config.statementLabelFontSize)
+        } else {
+            label.font = UIFont(name: purchasePresenter.config.statementLabelFontName, size: purchasePresenter.config.statementLabelFontSize)
         }
         
-        label.attributedText = labelString
+        label.textColor = UIColor(rgb: purchasePresenter.config.statementLabelHexColor)
+        
+        
+        label.text = purchasePresenter.config.statementLabelText
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
         label.isHidden = true
@@ -81,13 +74,13 @@ public class PurchaseController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 16)
         layout.itemSize = CGSize(width: (self.view.bounds.width - 90)/3, height: 50)
         layout.scrollDirection = .horizontal
-
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .clear
-                
+        
         collectionView.register(PriceCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         return collectionView
     }()
@@ -96,11 +89,21 @@ public class PurchaseController: UIViewController {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(purchasePresenter.config.purchaseButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchasePresenter.config.purchaseButtonFont
-        button.setTitleColor(purchasePresenter.config.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
+        
+        if purchasePresenter.config.purchaseButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.purchaseButtonFontSize, weight: .semibold)
+        } else {
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.purchaseButtonFontName, size: purchasePresenter.config.purchaseButtonFontSize)
+        }
+        
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor), for: .normal)
+        
+        
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
+        
+        
         button.layer.cornerRadius = 5
-
+        
         button.addTarget(self, action: #selector(purchaseButtonPressed(_:)), for: .touchUpInside)
         
         button.isHidden = true
@@ -113,16 +116,26 @@ public class PurchaseController: UIViewController {
         
         button.isHidden = purchasePresenter.config.isSecondaryButtonHidden
         button.setTitle(purchasePresenter.config.secondaryButtonTitle, for: UIControl.State())
-        button.backgroundColor = purchasePresenter.config.secondaryButtonBackgroundColor
-        button.setTitleColor(purchasePresenter.config.secondaryButtonTitleColor, for: .normal)
-        button.titleLabel?.font = purchasePresenter.config.secondaryButtonFont
+        
+        if purchasePresenter.config.secondaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.secondaryButtonFontSize, weight: .semibold)
+        } else {
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.secondaryButtonFontName, size: purchasePresenter.config.secondaryButtonFontSize)
+        }
+        
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.secondaryButtonTitleHexColor), for: .normal)
+        
+        
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.secondaryButtonBackgroundHexColor)
+        
+        
         button.addTarget(self, action: #selector(secondaryButtonPressed), for: .touchUpInside)
         return button
     }()
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         setupViews()
         
     }
@@ -131,7 +144,8 @@ public class PurchaseController: UIViewController {
         
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
         self.title = purchasePresenter.config.title
-        self.view.backgroundColor = purchasePresenter.config.backgroundColor
+        self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
+        
         self.view.addSubview(visualImageView)
         self.view.addSubview(statementLabel)
         self.view.addSubview(priceCollectionView)
@@ -155,7 +169,7 @@ public class PurchaseController: UIViewController {
         self.statementLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
         self.statementLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         self.statementLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-
+        
         self.priceCollectionView.topAnchor.constraint(greaterThanOrEqualTo: statementLabel.bottomAnchor, constant: 24).isActive = true
         self.priceCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         self.priceCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
@@ -204,7 +218,7 @@ extension PurchaseController: PurchaseViewDelegate {
         self.purchaseButton.isHidden = false
         self.secondaryButton.isHidden = self.purchasePresenter.config.isSecondaryButtonHidden
     }
-
+    
     public func showFailureViews() {
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
@@ -241,18 +255,24 @@ extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSour
         
         cell.textLabel.text = purchasePresenter.prices[indexPath.item]
         if purchasePresenter.chosenProductIndex == indexPath.item {
-            cell.textLabel.textColor = purchasePresenter.config.purchaseButtonTitleColor
-            cell.textLabel.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
-            cell.textLabel.layer.borderColor = purchasePresenter.config.purchaseButtonBackgroundColor.cgColor
+            
+            cell.textLabel.textColor = UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor)
+            
+            
+            cell.textLabel.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
+            cell.textLabel.layer.borderColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor).cgColor
+            
+            
         } else {
-            cell.textLabel.textColor = purchasePresenter.config.statementLabelColor
-            cell.textLabel.backgroundColor = purchasePresenter.config.backgroundColor
-            cell.textLabel.layer.borderColor = purchasePresenter.config.statementLabelColor.cgColor
+            
+            cell.textLabel.textColor = UIColor(rgb: purchasePresenter.config.statementLabelHexColor)
+            cell.textLabel.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
+            cell.textLabel.layer.borderColor = UIColor(rgb: purchasePresenter.config.statementLabelHexColor).cgColor
         }
         
         return cell
     }
-
+    
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         purchasePresenter.choosePrice(at: indexPath.item)
         collectionView.reloadData()
@@ -287,7 +307,7 @@ extension PurchaseController: UIPickerViewDelegate, UIPickerViewDataSource  {
         
         return pickerLabel!;
     }
-
+    
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         purchasePresenter.choosePrice(at: row)
