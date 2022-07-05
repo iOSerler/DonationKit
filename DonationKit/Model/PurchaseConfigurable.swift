@@ -10,15 +10,22 @@ import Foundation
 public struct PurchaseConfigurable {
     
     let configID: String
+    let type: String
     let title: String
     let backgroundHexColor: Int
     
     /// Statement
-    let statementImageName: String
-    let statementLabelText: String
-    let statementLabelFontName: String
-    let statementLabelFontSize: CGFloat
-    let statementLabelHexColor: Int
+    let imageName: String
+    
+    let titleLabelText: String
+    let titleLabelFontName: String
+    let titleLabelFontSize: CGFloat
+    let titleLabelHexColor: Int
+    
+    let bodyLabelText: String
+    let bodyLabelFontName: String
+    let bodyLabelFontSize: CGFloat
+    let bodyLabelHexColor: Int
     
     /// Purchase Button
     let purchaseButtonTitle: String
@@ -38,7 +45,8 @@ public struct PurchaseConfigurable {
     /// Successful Purchase
     let successImageName: String
     let isSuccessImagePulsating: Bool
-    let successLabelText: String
+    let successTitleLabelText: String
+    let successBodyLabelText: String
     let successButtonTitle: String
     
     /// Purchase Failed Label
@@ -54,14 +62,21 @@ public struct PurchaseConfigurable {
     
     public init(
         configID: String = "",
+        type: String = "OneTime",
         title: String = "Donation",
         backgroundHexColor: Int = 0xFFFFFF,
         
-        statementImageName: String = "",
-        statementLabelText: String =  "Please support us by donating!",
-        statementLabelFontName: String =  "",
-        statementLabelFontSize: CGFloat = 21,
-        statementLabelHexColor: Int = 0x000000,
+        imageName: String = "",
+        
+        titleLabelText: String =  "Become a supporter.",
+        titleLabelFontName: String =  "",
+        titleLabelFontSize: CGFloat = 21,
+        titleLabelHexColor: Int = 0x000000,
+        
+        bodyLabelText: String = "Make a recurring monthly donation to help us improve the technology for you!",
+        bodyLabelFontName: String =  "",
+        bodyLabelFontSize: CGFloat = 17,
+        bodyLabelHexColor: Int = 0x000000,
         
         purchaseButtonTitle: String =  "Donate",
         purchaseButtonFontName: String =  "",
@@ -78,7 +93,8 @@ public struct PurchaseConfigurable {
         
         successImageName: String = "",
         isSuccessImagePulsating: Bool = true,
-        successLabelText: String =  "Thank you for your generosity!",
+        successTitleLabelText: String =  "Thank you for your generosity!",
+        successBodyLabelText: String =  "Thank you for your generosity!",
         successButtonTitle: String =  "You're welcome",
         
         purchaseFailedText: String =  "Purchase failed, please try again",
@@ -89,14 +105,21 @@ public struct PurchaseConfigurable {
         purchaseIdForHistory: String? = nil
     ) {
         self.configID = configID
+        self.type = type
         self.title = title
         self.backgroundHexColor = backgroundHexColor
         
-        self.statementImageName = statementImageName
-        self.statementLabelText = statementLabelText
-        self.statementLabelFontName = statementLabelFontName
-        self.statementLabelFontSize = statementLabelFontSize
-        self.statementLabelHexColor = statementLabelHexColor
+        self.imageName = imageName
+        
+        self.titleLabelText = titleLabelText
+        self.titleLabelFontName = titleLabelFontName
+        self.titleLabelFontSize = titleLabelFontSize
+        self.titleLabelHexColor = titleLabelHexColor
+        
+        self.bodyLabelText = bodyLabelText
+        self.bodyLabelFontName = bodyLabelFontName
+        self.bodyLabelFontSize = bodyLabelFontSize
+        self.bodyLabelHexColor = bodyLabelHexColor
                 
         self.purchaseButtonTitle = purchaseButtonTitle
         self.purchaseButtonFontName = purchaseButtonFontName
@@ -113,7 +136,8 @@ public struct PurchaseConfigurable {
         
         self.successImageName = successImageName
         self.isSuccessImagePulsating = isSuccessImagePulsating
-        self.successLabelText = successLabelText
+        self.successTitleLabelText = successTitleLabelText
+        self.successBodyLabelText = successBodyLabelText
         self.successButtonTitle = successButtonTitle
         
         self.purchaseFailedText = purchaseFailedText

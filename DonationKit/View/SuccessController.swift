@@ -23,7 +23,7 @@ public class SuccessController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var successImageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -31,20 +31,20 @@ public class SuccessController: UIViewController {
         return imageView
     }()
     
-    private lazy var successLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         
-        label.text = purchasePresenter.config.successLabelText
+        label.text = purchasePresenter.config.successTitleLabelText
         
-        if purchasePresenter.config.statementLabelFontName.isEmpty {
-            label.font = UIFont.systemFont(ofSize: purchasePresenter.config.statementLabelFontSize)
+        if purchasePresenter.config.bodyLabelFontName.isEmpty {
+            label.font = UIFont.systemFont(ofSize: purchasePresenter.config.bodyLabelFontSize)
         } else {
-            label.font = UIFont(name: purchasePresenter.config.statementLabelFontName, size: purchasePresenter.config.statementLabelFontSize)
+            label.font = UIFont(name: purchasePresenter.config.bodyLabelFontName, size: purchasePresenter.config.bodyLabelFontSize)
         }
         
-        label.textColor = UIColor(rgb: purchasePresenter.config.statementLabelHexColor)
+        label.textColor = UIColor(rgb: purchasePresenter.config.bodyLabelHexColor)
         
         
         label.textAlignment = NSTextAlignment.center
@@ -98,35 +98,35 @@ public class SuccessController: UIViewController {
         self.title = purchasePresenter.config.title
         self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
         
-        self.view.addSubview(successImageView)
-        self.view.addSubview(successLabel)
+        self.view.addSubview(imageView)
+        self.view.addSubview(titleLabel)
         self.view.addSubview(proceedButton)
         
         if #available(iOS 11.0, *) {
-            self.successImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
-            self.successImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-            self.successImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-            self.successImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.30).isActive = true
+            self.imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+            self.imageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+            self.imageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
+            self.imageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.30).isActive = true
             
-            self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
-            self.successLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-            self.successLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-            self.successLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
+            self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
+            self.titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
+            self.titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
+            self.titleLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
             
             self.proceedButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -110).isActive = true
             self.proceedButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
             self.proceedButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
             self.proceedButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
         } else {
-            self.successImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
-            self.successImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-            self.successImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-            self.successImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.30).isActive = true
+            self.imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
+            self.imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+            self.imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+            self.imageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.30).isActive = true
             
-            self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
-            self.successLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-            self.successLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-            self.successLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+            self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
+            self.titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+            self.titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+            self.titleLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
             
             self.proceedButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
             self.proceedButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
@@ -142,7 +142,7 @@ public class SuccessController: UIViewController {
             scaleAnimation.autoreverses = true
             scaleAnimation.fromValue = 1.0;
             scaleAnimation.toValue = 1.10;
-            self.successImageView.layer.add(scaleAnimation, forKey: "scale")
+            self.imageView.layer.add(scaleAnimation, forKey: "scale")
         }
     }
     

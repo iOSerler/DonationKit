@@ -18,6 +18,7 @@ public class PurchasePresenter {
     
     public var config = PurchaseConfigurable()
     var prices: [String] = []
+    var titles: [String] = []
 
     private var products = [SKProduct]()
     private var productChosen: SKProduct?
@@ -67,17 +68,20 @@ public class PurchasePresenter {
                 priceFormatter.numberStyle = .currency
                 
                 var prices: [String] = []
+                var titles: [String] = []
                 
                 for product in self.products {
                     if PurchaseService.canMakePayments() {
                         priceFormatter.locale = product.priceLocale
                         prices.append("\(priceFormatter.string(from: product.price)!)")
+                        titles.append(product.localizedTitle)
                     } else {
                         //not available for purchse
                     }
                 }
                 
                 self.prices = prices
+                self.titles = titles
                 
                 if self.products.count > 1 {
                     self.productChosen = self.products[1]

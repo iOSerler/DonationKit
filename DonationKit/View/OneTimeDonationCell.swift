@@ -1,5 +1,5 @@
 //
-//  PriceCollectionViewCell.swift
+//  OneTimeDonationCell.swift
 //  
 //
 //  Created by Daniya on 08/01/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PriceCollectionViewCell: UICollectionViewCell {
+class OneTimeDonationCell: UICollectionViewCell {
     
     lazy var textLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
     

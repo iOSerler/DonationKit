@@ -21,12 +21,11 @@ public class DonateOptionController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var visualImageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: config.statementImageName)
+        imageView.image = UIImage(named: config.imageName)
         imageView.contentMode = .scaleAspectFit
-        imageView.isHidden = true
         return imageView
     }()
     
@@ -37,7 +36,6 @@ public class DonateOptionController: UIViewController {
         label.text = config.title
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
-        label.isHidden = true
         return label
     }()
     
@@ -48,7 +46,6 @@ public class DonateOptionController: UIViewController {
         label.text = config.title
         label.textAlignment = NSTextAlignment.center
         label.adjustsFontSizeToFitWidth = true
-        label.isHidden = true
         return label
     }()
     
@@ -68,8 +65,6 @@ public class DonateOptionController: UIViewController {
         button.layer.cornerRadius = 5
 
         button.addTarget(self, action: #selector(subscribeButtonPressed(_:)), for: .touchUpInside)
-        
-        button.isHidden = true
         return button
     }()
     
@@ -89,8 +84,6 @@ public class DonateOptionController: UIViewController {
         button.layer.cornerRadius = 5
 
         button.addTarget(self, action: #selector(donateOnceButtonPressed), for: .touchUpInside)
-        
-        button.isHidden = true
         return button
     }()
     
@@ -106,21 +99,30 @@ public class DonateOptionController: UIViewController {
         self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
         self.title = config.title
         self.view.backgroundColor = UIColor(rgb: config.backgroundHexColor)
-        self.view.addSubview(visualImageView)
+        self.view.addSubview(imageView)
+        self.view.addSubview(titleLabel)
         self.view.addSubview(bodyLabel)
         self.view.addSubview(subscribeButton)
         self.view.addSubview(donateOnceButton)
 
         
         if #available(iOS 11.0, *) {
-            self.visualImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+            self.imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
             self.donateOnceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
         } else {
-            self.visualImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+            self.imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
             self.donateOnceButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
         }
         
-        self.bodyLabel.topAnchor.constraint(equalTo: visualImageView.bottomAnchor, constant: 16).isActive = true
+        self.imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        self.imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        self.imageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+        
+        self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
+        self.titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        self.titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        
+        self.bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
         self.bodyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         self.bodyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         
@@ -128,10 +130,6 @@ public class DonateOptionController: UIViewController {
         self.subscribeButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
         self.subscribeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         self.subscribeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
-        
-        self.visualImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        self.visualImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        self.visualImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
         
         self.donateOnceButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
         self.donateOnceButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
