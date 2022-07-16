@@ -1,5 +1,5 @@
 //
-//  PriceCollectionViewCell.swift
+//  OneTimeDonationCell.swift
 //  
 //
 //  Created by Daniya on 08/01/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PriceCollectionViewCell: UICollectionViewCell {
+class OneTimeDonationCell: UICollectionViewCell {
     
     lazy var textLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
     
@@ -18,8 +18,8 @@ class PriceCollectionViewCell: UICollectionViewCell {
         textLabel.clipsToBounds = true
         textLabel.layer.borderWidth = 1
         textLabel.numberOfLines = 0
-        textLabel.layer.cornerRadius = 10
-        textLabel.font = UIFont.boldSystemFont(ofSize: 19)
+        textLabel.layer.cornerRadius = 24
+        textLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         textLabel.textAlignment = NSTextAlignment.center
         addSubview(textLabel)
     }

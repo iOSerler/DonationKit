@@ -5,39 +5,48 @@
 //  Created by Daniya on 10/02/2022.
 //
 
-import UIKit
+import Foundation
 
-public struct PurchaseConfigurable {
+public struct PurchaseConfigurable: StatementConfiguration {
     
     let configID: String
+    let type: String
     let title: String
-    let backgroundColor: UIColor
+    let backgroundHexColor: Int
     
     /// Statement
-    let statementImage: UIImage?
-    let statementLabelText: String
-    let highlightedLabelText: String?
-    let statementLabelFont: UIFont
-    let highlightedLabelFont: UIFont
-    let statementLabelColor: UIColor
+    let imageName: String
+    
+    let titleLabelText: String
+    let titleLabelFontName: String
+    let titleLabelFontSize: CGFloat
+    let titleLabelHexColor: Int
+    
+    let bodyLabelText: String
+    let bodyLabelFontName: String
+    let bodyLabelFontSize: CGFloat
+    let bodyLabelHexColor: Int
     
     /// Purchase Button
     let purchaseButtonTitle: String
-    let purchaseButtonFont: UIFont
-    let purchaseButtonTitleColor: UIColor
-    let purchaseButtonBackgroundColor: UIColor
+    let purchaseButtonFontName: String
+    let purchaseButtonFontSize: CGFloat
+    let purchaseButtonTitleHexColor: Int
+    let purchaseButtonBackgroundHexColor: Int
     
     /// Secondary Action Title
     let isSecondaryButtonHidden: Bool
     let secondaryButtonTitle: String
-    let secondaryButtonFont: UIFont
-    let secondaryButtonTitleColor: UIColor
-    let secondaryButtonBackgroundColor: UIColor
+    let secondaryButtonFontName: String
+    let secondaryButtonFontSize: CGFloat
+    let secondaryButtonTitleHexColor: Int
+    let secondaryButtonBackgroundHexColor: Int
 
     /// Successful Purchase
-    let successImage: UIImage?
+    let successImageName: String
     let isSuccessImagePulsating: Bool
-    let successLabelText: String
+    let successTitleLabelText: String
+    let successBodyLabelText: String
     let successButtonTitle: String
     
     /// Purchase Failed Label
@@ -51,32 +60,43 @@ public struct PurchaseConfigurable {
     /// Custom ID to log a successful purchase
     let purchaseIdForHistory: String?
     
+    let subscriptionPeriods: [String]
+    
     public init(
         configID: String = "",
+        type: String = "OneTime",
         title: String = "Donation",
-        backgroundColor: UIColor = .white,
+        backgroundHexColor: Int = 0xFFFFFF,
         
-        statementImage: UIImage? = nil,
-        statementLabelText: String =  "Please support us by donating!",
-        highlightedLabelText: String? = nil,
-        statementLabelFont: UIFont = UIFont.systemFont(ofSize: 21),
-        highlightedLabelFont: UIFont = UIFont.boldSystemFont(ofSize: 23),
-        statementLabelColor: UIColor = .black,
+        imageName: String = "",
+        
+        titleLabelText: String =  "Become a supporter.",
+        titleLabelFontName: String =  "",
+        titleLabelFontSize: CGFloat = 21,
+        titleLabelHexColor: Int = 0x000000,
+        
+        bodyLabelText: String = "Make a recurring monthly donation to help us improve the technology for you!",
+        bodyLabelFontName: String =  "",
+        bodyLabelFontSize: CGFloat = 17,
+        bodyLabelHexColor: Int = 0x000000,
         
         purchaseButtonTitle: String =  "Donate",
-        purchaseButtonFont: UIFont = UIFont.systemFont(ofSize: 19, weight: .semibold),
-        purchaseButtonTitleColor: UIColor  = .white,
-        purchaseButtonBackgroundColor: UIColor = .systemBlue,
+        purchaseButtonFontName: String =  "",
+        purchaseButtonFontSize: CGFloat = 19,
+        purchaseButtonTitleHexColor: Int = 0xFFFFFF,
+        purchaseButtonBackgroundHexColor: Int = 0x007FFF,
         
         isSecondaryButtonHidden: Bool = true,
         secondaryButtonTitle: String = "Skip",
-        secondaryButtonFont: UIFont = UIFont.systemFont(ofSize: 17, weight: .light),
-        secondaryButtonTitleColor: UIColor = .black,
-        secondaryButtonBackgroundColor: UIColor = .clear,
+        secondaryButtonFontName: String =  "",
+        secondaryButtonFontSize: CGFloat = 17,
+        secondaryButtonTitleHexColor: Int = 0x000000,
+        secondaryButtonBackgroundHexColor: Int = 0x0000FFFF,
         
-        successImage: UIImage? = nil,
+        successImageName: String = "",
         isSuccessImagePulsating: Bool = true,
-        successLabelText: String =  "Thank you for your generosity!",
+        successTitleLabelText: String =  "Thank you for your generosity!",
+        successBodyLabelText: String =  "Thank you for your generosity!",
         successButtonTitle: String =  "You're welcome",
         
         purchaseFailedText: String =  "Purchase failed, please try again",
@@ -84,33 +104,43 @@ public struct PurchaseConfigurable {
         
         successAction: (() -> Void)? = nil,
         secondaryAction: (() -> Void)? = nil,
-        purchaseIdForHistory: String? = nil
+        purchaseIdForHistory: String? = nil,
+        subscriptionPeriods: [String] = ["day", "week", "month", "year"]
     ) {
         self.configID = configID
+        self.type = type
         self.title = title
-        self.backgroundColor = backgroundColor
+        self.backgroundHexColor = backgroundHexColor
         
-        self.statementImage = statementImage
-        self.statementLabelText = statementLabelText
-        self.highlightedLabelText = highlightedLabelText
-        self.statementLabelFont = statementLabelFont
-        self.highlightedLabelFont = highlightedLabelFont
-        self.statementLabelColor = statementLabelColor
+        self.imageName = imageName
+        
+        self.titleLabelText = titleLabelText
+        self.titleLabelFontName = titleLabelFontName
+        self.titleLabelFontSize = titleLabelFontSize
+        self.titleLabelHexColor = titleLabelHexColor
+        
+        self.bodyLabelText = bodyLabelText
+        self.bodyLabelFontName = bodyLabelFontName
+        self.bodyLabelFontSize = bodyLabelFontSize
+        self.bodyLabelHexColor = bodyLabelHexColor
                 
         self.purchaseButtonTitle = purchaseButtonTitle
-        self.purchaseButtonFont = purchaseButtonFont
-        self.purchaseButtonTitleColor = purchaseButtonTitleColor
-        self.purchaseButtonBackgroundColor = purchaseButtonBackgroundColor
+        self.purchaseButtonFontName = purchaseButtonFontName
+        self.purchaseButtonFontSize = purchaseButtonFontSize
+        self.purchaseButtonTitleHexColor = purchaseButtonTitleHexColor
+        self.purchaseButtonBackgroundHexColor = purchaseButtonBackgroundHexColor
         
         self.isSecondaryButtonHidden = isSecondaryButtonHidden
         self.secondaryButtonTitle = secondaryButtonTitle
-        self.secondaryButtonFont = secondaryButtonFont
-        self.secondaryButtonTitleColor = secondaryButtonTitleColor
-        self.secondaryButtonBackgroundColor = secondaryButtonBackgroundColor
+        self.secondaryButtonFontName = secondaryButtonFontName
+        self.secondaryButtonFontSize = secondaryButtonFontSize
+        self.secondaryButtonTitleHexColor = secondaryButtonTitleHexColor
+        self.secondaryButtonBackgroundHexColor = secondaryButtonBackgroundHexColor
         
-        self.successImage = successImage
+        self.successImageName = successImageName
         self.isSuccessImagePulsating = isSuccessImagePulsating
-        self.successLabelText = successLabelText
+        self.successTitleLabelText = successTitleLabelText
+        self.successBodyLabelText = successBodyLabelText
         self.successButtonTitle = successButtonTitle
         
         self.purchaseFailedText = purchaseFailedText
@@ -118,6 +148,8 @@ public struct PurchaseConfigurable {
         
         self.successAction = successAction
         self.secondaryAction = secondaryAction
+        
         self.purchaseIdForHistory = purchaseIdForHistory
+        self.subscriptionPeriods = subscriptionPeriods
     }
 }
