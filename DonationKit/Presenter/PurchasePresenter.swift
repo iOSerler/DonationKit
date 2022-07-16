@@ -19,6 +19,7 @@ public class PurchasePresenter {
     public var config = PurchaseConfigurable()
     var prices: [String] = []
     var titles: [String] = []
+    var subscriptionPeriods: [String] = []
 
     private var products = [SKProduct]()
     private var productChosen: SKProduct?
@@ -69,12 +70,21 @@ public class PurchasePresenter {
                 
                 var prices: [String] = []
                 var titles: [String] = []
+                var subscriptionPeriods: [String] = []
                 
                 for product in self.products {
                     if PurchaseService.canMakePayments() {
                         priceFormatter.locale = product.priceLocale
                         prices.append("\(priceFormatter.string(from: product.price)!)")
                         titles.append(product.localizedTitle)
+                        
+                        /// fetch period name for subscriptions
+                        if #available(iOS 11.2, *),
+                           let period = product.subscriptionPeriod,
+                           config.subscriptionPeriods.count > period.unit.rawValue {
+                            let periodIndex = Int(period.unit.rawValue)
+                            subscriptionPeriods.append(config.subscriptionPeriods[periodIndex])
+                        }
                     } else {
                         //not available for purchse
                     }
@@ -82,11 +92,13 @@ public class PurchasePresenter {
                 
                 self.prices = prices
                 self.titles = titles
+                self.subscriptionPeriods = subscriptionPeriods
+                let chosenIndex = 0
                 
-                if self.products.count > 1 {
-                    self.productChosen = self.products[1]
-                } else if let firts = self.products.first {
-                    self.productChosen = firts
+                if self.products.count > chosenIndex {
+                    self.productChosen = self.products[chosenIndex]
+                } else if let first = self.products.first {
+                    self.productChosen = first
                 }
                 
                 DispatchQueue.main.async {

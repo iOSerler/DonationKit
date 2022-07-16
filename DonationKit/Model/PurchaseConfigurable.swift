@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PurchaseConfigurable {
+public struct PurchaseConfigurable: StatementConfiguration {
     
     let configID: String
     let type: String
@@ -60,6 +60,8 @@ public struct PurchaseConfigurable {
     /// Custom ID to log a successful purchase
     let purchaseIdForHistory: String?
     
+    let subscriptionPeriods: [String]
+    
     public init(
         configID: String = "",
         type: String = "OneTime",
@@ -102,7 +104,8 @@ public struct PurchaseConfigurable {
         
         successAction: (() -> Void)? = nil,
         secondaryAction: (() -> Void)? = nil,
-        purchaseIdForHistory: String? = nil
+        purchaseIdForHistory: String? = nil,
+        subscriptionPeriods: [String] = ["day", "week", "month", "year"]
     ) {
         self.configID = configID
         self.type = type
@@ -145,6 +148,8 @@ public struct PurchaseConfigurable {
         
         self.successAction = successAction
         self.secondaryAction = secondaryAction
+        
         self.purchaseIdForHistory = purchaseIdForHistory
+        self.subscriptionPeriods = subscriptionPeriods
     }
 }
