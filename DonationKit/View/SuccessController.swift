@@ -41,16 +41,16 @@ public class SuccessController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(purchasePresenter.config.successButtonTitle, for: UIControl.State())
         
-        if purchasePresenter.config.purchaseButtonFontName.isEmpty {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.purchaseButtonFontSize, weight: .semibold)
+        if purchasePresenter.config.primaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.primaryButtonFontSize, weight: .semibold)
         } else {
-            button.titleLabel?.font = UIFont(name: purchasePresenter.config.purchaseButtonFontName, size: purchasePresenter.config.purchaseButtonFontSize)
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.primaryButtonFontName, size: purchasePresenter.config.primaryButtonFontSize)
         }
         
-        button.setTitleColor(UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor), for: .normal)
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.primaryButtonTitleHexColor), for: .normal)
         
         
-        button.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor)
         
         
         button.layer.cornerRadius = 5
@@ -79,13 +79,13 @@ public class SuccessController: UIViewController {
     private func setupViews() {
         
         self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
-        self.view.addSubview(confettiView)
         self.view.addSubview(statementView)
+        self.view.addSubview(confettiView)
         self.view.addSubview(proceedButton)
         
         statementView.setImage(purchasePresenter.config.successImageName)
-        statementView.setTitleText(purchasePresenter.config.successTitleLabelText)
-        statementView.setBodyText(purchasePresenter.config.successBodyLabelText)
+        statementView.setTitleText(purchasePresenter.config.successTitleText)
+        statementView.setBodyText(purchasePresenter.config.successBodyText)
         
         if #available(iOS 11.0, *) {
             self.statementView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true

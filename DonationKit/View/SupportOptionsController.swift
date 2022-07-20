@@ -7,12 +7,11 @@
 
 import UIKit
 
-
 public class DonateOptionController: UIViewController {
     
-    let config: PurchaseConfigurable
+    let config: PurchaseConfiguration
     
-    public init(config: PurchaseConfigurable) {
+    public init(config: PurchaseConfiguration) {
         self.config = config
         super.init(nibName: nil, bundle: nil)
     }
@@ -21,67 +20,73 @@ public class DonateOptionController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: config.imageName)
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private let cardView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 15
+        view.clipsToBounds = true
+        return view
     }()
     
-    private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = config.title
-        label.textAlignment = NSTextAlignment.center
-        label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var bodyLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        label.text = config.title
-        label.textAlignment = NSTextAlignment.center
-        label.adjustsFontSizeToFitWidth = true
-        return label
+    private lazy var statementView: StatementView = {
+        let view = StatementView(config: config)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private lazy var subscribeButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(config.purchaseButtonTitle, for: UIControl.State())
+        button.setTitle(config.primaryButtonTitle, for: UIControl.State())
         
-        if config.purchaseButtonFontName.isEmpty {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: config.purchaseButtonFontSize, weight: .semibold)
+        if config.primaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: config.primaryButtonFontSize, weight: .semibold)
         } else {
-            button.titleLabel?.font = UIFont(name: config.purchaseButtonFontName, size: config.purchaseButtonFontSize)
+            button.titleLabel?.font = UIFont(name: config.primaryButtonFontName, size: config.primaryButtonFontSize)
         }
         
-        button.setTitleColor(UIColor(rgb: config.purchaseButtonTitleHexColor), for: .normal)
-        button.backgroundColor = UIColor(rgb: config.purchaseButtonBackgroundHexColor)
-        button.layer.cornerRadius = 5
+        button.setTitleColor(UIColor(rgb: config.primaryButtonTitleHexColor), for: .normal)
+        button.backgroundColor = UIColor(rgb: config.primaryButtonBackgroundHexColor)
+        button.layer.cornerRadius = 10
 
         button.addTarget(self, action: #selector(subscribeButtonPressed(_:)), for: .touchUpInside)
         return button
     }()
     
+    private lazy var alternativesLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        
+        if config.titleLabelFontName.isEmpty {
+            label.font = UIFont.systemFont(ofSize: config.titleLabelFontSize-3, weight: .medium)
+        } else {
+            label.font = UIFont(name: config.titleLabelFontName, size: config.titleLabelFontSize-3)
+        }
+        label.textColor = UIColor(rgb: config.titleLabelHexColor)
+        
+        label.text = config.successTitleText
+        label.adjustsFontSizeToFitWidth = true
+        return label
+    }()
+    
     private lazy var donateOnceButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(config.purchaseButtonTitle, for: UIControl.State())
+        button.setTitle(config.secondaryButtonTitle, for: UIControl.State())
         
-        if config.purchaseButtonFontName.isEmpty {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: config.purchaseButtonFontSize, weight: .semibold)
+        if config.secondaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: config.secondaryButtonFontSize, weight: .regular)
         } else {
-            button.titleLabel?.font = UIFont(name: config.purchaseButtonFontName, size: config.purchaseButtonFontSize)
+            button.titleLabel?.font = UIFont(name: config.secondaryButtonFontName, size: config.secondaryButtonFontSize)
         }
         
-        button.setTitleColor(UIColor(rgb: config.purchaseButtonTitleHexColor), for: .normal)
-        button.backgroundColor = UIColor(rgb: config.purchaseButtonBackgroundHexColor)
-        button.layer.cornerRadius = 5
+        button.contentHorizontalAlignment = .left
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        button.setTitleColor(UIColor(rgb: config.secondaryButtonTitleHexColor), for: .normal)
+        button.backgroundColor = UIColor(rgb: config.secondaryButtonBackgroundHexColor)
+        button.layer.cornerRadius = 10
 
         button.addTarget(self, action: #selector(donateOnceButtonPressed), for: .touchUpInside)
         return button
@@ -96,52 +101,57 @@ public class DonateOptionController: UIViewController {
     
     private func setupViews() {
         
-        self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
-        self.title = config.title
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
         self.view.backgroundColor = UIColor(rgb: config.backgroundHexColor)
-        self.view.addSubview(imageView)
-        self.view.addSubview(titleLabel)
-        self.view.addSubview(bodyLabel)
-        self.view.addSubview(subscribeButton)
+        self.view.addSubview(cardView)
+        self.cardView.addSubview(statementView)
+        self.cardView.addSubview(subscribeButton)
+        self.view.addSubview(alternativesLabel)
         self.view.addSubview(donateOnceButton)
 
-        
         if #available(iOS 11.0, *) {
-            self.imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40).isActive = true
+            self.cardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         } else {
-            self.imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
-            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30).isActive = true
+            self.cardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
         }
         
-        self.imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        self.imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        self.imageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
+        self.cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        self.cardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        self.cardView.heightAnchor.constraint(equalTo: cardView.widthAnchor, constant: 0).isActive = true
+        self.cardView.bottomAnchor.constraint(equalTo: alternativesLabel.topAnchor, constant: -32).isActive = true
         
-        self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
-        self.titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        self.titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        self.statementView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16).isActive = true
+        self.statementView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 0).isActive = true
+        self.statementView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: 0).isActive = true
+        self.statementView.bottomAnchor.constraint(lessThanOrEqualTo: subscribeButton.topAnchor, constant: -2).isActive = true
         
-        self.bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16).isActive = true
-        self.bodyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        self.bodyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        
-        self.subscribeButton.bottomAnchor.constraint(equalTo: donateOnceButton.topAnchor, constant: -16).isActive = true
-        self.subscribeButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.subscribeButton.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16).isActive = true
+        self.subscribeButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16).isActive = true
         self.subscribeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        self.subscribeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        self.subscribeButton.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -24).isActive = true
         
-        self.donateOnceButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.alternativesLabel.leadingAnchor.constraint(equalTo: self.cardView.leadingAnchor, constant: 16).isActive = true
+        self.alternativesLabel.trailingAnchor.constraint(equalTo: self.cardView.trailingAnchor, constant: 16).isActive = true
+        self.alternativesLabel.bottomAnchor.constraint(equalTo: donateOnceButton.topAnchor, constant: -8).isActive = true
+        
+        self.donateOnceButton.widthAnchor.constraint(equalTo: cardView.widthAnchor, constant: 0).isActive = true
         self.donateOnceButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         self.donateOnceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+        
+        if #available(iOS 11.0, *) {
+            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24).isActive = true
+        } else {
+            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
+        }
     }
     
     @objc private func subscribeButtonPressed(_ sender: AnyObject) {
-        
+        config.successAction?()
     }
     
     @objc private func donateOnceButtonPressed() {
-
+        config.secondaryAction?()
     }
     
 }

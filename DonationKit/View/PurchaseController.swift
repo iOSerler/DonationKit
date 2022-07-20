@@ -66,25 +66,24 @@ public class PurchaseController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.register(OneTimeDonationCell.self, forCellWithReuseIdentifier: "OneTimeDonationCell")
         collectionView.register(RecurringDonationCell.self, forCellWithReuseIdentifier: "RecurringDonationCell")
-
         return collectionView
     }()
     
     private lazy var purchaseButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(purchasePresenter.config.purchaseButtonTitle, for: UIControl.State())
+        button.setTitle(purchasePresenter.config.primaryButtonTitle, for: UIControl.State())
         
-        if purchasePresenter.config.purchaseButtonFontName.isEmpty {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.purchaseButtonFontSize, weight: .semibold)
+        if purchasePresenter.config.primaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.primaryButtonFontSize, weight: .semibold)
         } else {
-            button.titleLabel?.font = UIFont(name: purchasePresenter.config.purchaseButtonFontName, size: purchasePresenter.config.purchaseButtonFontSize)
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.primaryButtonFontName, size: purchasePresenter.config.primaryButtonFontSize)
         }
         
-        button.setTitleColor(UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor), for: .normal)
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.primaryButtonTitleHexColor), for: .normal)
         
         
-        button.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor)
         
         
         button.layer.cornerRadius = 10
@@ -141,11 +140,9 @@ public class PurchaseController: UIViewController {
         self.activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
         if #available(iOS 11.0, *) {
-            self.statementView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
-            self.secondaryButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24).isActive = true
+            self.statementView.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         } else {
-            self.statementView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
-            self.secondaryButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
+            self.statementView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 8).isActive = true
         }
         
         self.statementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
@@ -159,7 +156,7 @@ public class PurchaseController: UIViewController {
         if purchasePresenter.config.type == "Recurring" {
             self.priceCollectionView.heightAnchor.constraint(equalToConstant: 222).isActive = true
         } else {
-            self.priceCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 130).isActive = true
+            self.priceCollectionView.heightAnchor.constraint(greaterThanOrEqualToConstant: 132).isActive = true
         }
         
         self.purchaseButton.bottomAnchor.constraint(equalTo: secondaryButton.topAnchor, constant: -8).isActive = true
@@ -169,7 +166,19 @@ public class PurchaseController: UIViewController {
         
         self.secondaryButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         self.secondaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        if let _ = purchasePresenter.config.secondaryAction {
+            self.secondaryButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        } else {
+            self.secondaryButton.heightAnchor.constraint(equalToConstant: 0).isActive = true
+        }
+        
+        if #available(iOS 11.0, *) {
+            self.secondaryButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24).isActive = true
+        } else {
+            self.secondaryButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
+        }
+        
     }
     
     @objc private func purchaseButtonPressed(_ sender: AnyObject) {
@@ -242,7 +251,7 @@ extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSour
             cell.contentView.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
             
             if purchasePresenter.chosenProductIndex == indexPath.item {
-                cell.contentView.layer.borderColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor).cgColor
+                cell.contentView.layer.borderColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor).cgColor
             } else {
                 cell.contentView.layer.borderColor = UIColor.lightGray.cgColor
             }
@@ -256,11 +265,11 @@ extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.textLabel.text = purchasePresenter.prices[indexPath.item]
         if purchasePresenter.chosenProductIndex == indexPath.item {
             
-            cell.textLabel.textColor = UIColor(rgb: purchasePresenter.config.purchaseButtonTitleHexColor)
+            cell.textLabel.textColor = UIColor(rgb: purchasePresenter.config.primaryButtonTitleHexColor)
             
             
-            cell.textLabel.backgroundColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor)
-            cell.textLabel.layer.borderColor = UIColor(rgb: purchasePresenter.config.purchaseButtonBackgroundHexColor).cgColor
+            cell.textLabel.backgroundColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor)
+            cell.textLabel.layer.borderColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor).cgColor
             
             
         } else {

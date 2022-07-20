@@ -1,5 +1,5 @@
 //
-//  PurchaseConfigurable.swift
+//  PurchaseConfiguration.swift
 //  
 //
 //  Created by Daniya on 10/02/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PurchaseConfigurable: StatementConfiguration {
+public struct PurchaseConfiguration: StatementConfigurable {
     
     let configID: String
     let type: String
@@ -28,11 +28,11 @@ public struct PurchaseConfigurable: StatementConfiguration {
     let bodyLabelHexColor: Int
     
     /// Purchase Button
-    let purchaseButtonTitle: String
-    let purchaseButtonFontName: String
-    let purchaseButtonFontSize: CGFloat
-    let purchaseButtonTitleHexColor: Int
-    let purchaseButtonBackgroundHexColor: Int
+    let primaryButtonTitle: String
+    let primaryButtonFontName: String
+    let primaryButtonFontSize: CGFloat
+    let primaryButtonTitleHexColor: Int
+    let primaryButtonBackgroundHexColor: Int
     
     /// Secondary Action Title
     let isSecondaryButtonHidden: Bool
@@ -45,8 +45,8 @@ public struct PurchaseConfigurable: StatementConfiguration {
     /// Successful Purchase
     let successImageName: String
     let isSuccessImagePulsating: Bool
-    let successTitleLabelText: String
-    let successBodyLabelText: String
+    let successTitleText: String
+    let successBodyText: String
     let successButtonTitle: String
     
     /// Purchase Failed Label
@@ -68,7 +68,7 @@ public struct PurchaseConfigurable: StatementConfiguration {
         title: String = "Donation",
         backgroundHexColor: Int = 0xFFFFFF,
         
-        imageName: String = "",
+        imageName: String = "online-money",
         
         titleLabelText: String =  "Become a supporter.",
         titleLabelFontName: String =  "",
@@ -80,11 +80,11 @@ public struct PurchaseConfigurable: StatementConfiguration {
         bodyLabelFontSize: CGFloat = 17,
         bodyLabelHexColor: Int = 0x000000,
         
-        purchaseButtonTitle: String =  "Donate",
-        purchaseButtonFontName: String =  "",
-        purchaseButtonFontSize: CGFloat = 19,
-        purchaseButtonTitleHexColor: Int = 0xFFFFFF,
-        purchaseButtonBackgroundHexColor: Int = 0x007FFF,
+        primaryButtonTitle: String =  "Donate",
+        primaryButtonFontName: String =  "",
+        primaryButtonFontSize: CGFloat = 19,
+        primaryButtonTitleHexColor: Int = 0xFFFFFF,
+        primaryButtonBackgroundHexColor: Int = 0x007FFF,
         
         isSecondaryButtonHidden: Bool = true,
         secondaryButtonTitle: String = "Skip",
@@ -123,12 +123,12 @@ public struct PurchaseConfigurable: StatementConfiguration {
         self.bodyLabelFontName = bodyLabelFontName
         self.bodyLabelFontSize = bodyLabelFontSize
         self.bodyLabelHexColor = bodyLabelHexColor
-                
-        self.purchaseButtonTitle = purchaseButtonTitle
-        self.purchaseButtonFontName = purchaseButtonFontName
-        self.purchaseButtonFontSize = purchaseButtonFontSize
-        self.purchaseButtonTitleHexColor = purchaseButtonTitleHexColor
-        self.purchaseButtonBackgroundHexColor = purchaseButtonBackgroundHexColor
+        
+        self.primaryButtonTitle = primaryButtonTitle
+        self.primaryButtonFontName = primaryButtonFontName
+        self.primaryButtonFontSize = primaryButtonFontSize
+        self.primaryButtonTitleHexColor = primaryButtonTitleHexColor
+        self.primaryButtonBackgroundHexColor = primaryButtonBackgroundHexColor
         
         self.isSecondaryButtonHidden = isSecondaryButtonHidden
         self.secondaryButtonTitle = secondaryButtonTitle
@@ -139,8 +139,8 @@ public struct PurchaseConfigurable: StatementConfiguration {
         
         self.successImageName = successImageName
         self.isSuccessImagePulsating = isSuccessImagePulsating
-        self.successTitleLabelText = successTitleLabelText
-        self.successBodyLabelText = successBodyLabelText
+        self.successTitleText = successTitleLabelText
+        self.successBodyText = successBodyLabelText
         self.successButtonTitle = successButtonTitle
         
         self.purchaseFailedText = purchaseFailedText

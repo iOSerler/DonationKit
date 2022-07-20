@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol StatementConfiguration {
+protocol StatementConfigurable {
     
     var imageName: String {get}
 
@@ -26,7 +26,7 @@ protocol StatementConfiguration {
 
 class StatementView: UIView {
     
-    var config: StatementConfiguration!
+    var config: StatementConfigurable!
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
@@ -46,7 +46,7 @@ class StatementView: UIView {
         } else {
             label.font = UIFont(name: config.titleLabelFontName, size: config.titleLabelFontSize)
         }
-        label.textColor = UIColor(rgb: config.bodyLabelHexColor)
+        label.textColor = UIColor(rgb: config.titleLabelHexColor)
         
         label.text = config.titleLabelText
         label.textAlignment = NSTextAlignment.center
@@ -73,15 +73,13 @@ class StatementView: UIView {
         return label
     }()
     
-    convenience init(config: StatementConfiguration) {
+    convenience init(config: StatementConfigurable) {
         self.init()
         self.config = config
         self.setupViews()
     }
     
     private func setupViews() {
-        
-        self.backgroundColor = UIColor(rgb: config.backgroundHexColor)
         
         self.addSubview(imageView)
         self.addSubview(titleLabel)
@@ -90,12 +88,12 @@ class StatementView: UIView {
         self.imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
         self.imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        self.imageView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.4).isActive = true
+        self.imageView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3).isActive = true
         
         self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
         self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
-        self.titleLabel.bottomAnchor.constraint(equalTo: bodyLabel.topAnchor, constant: -8).isActive = true
+        self.titleLabel.bottomAnchor.constraint(equalTo: bodyLabel.topAnchor, constant: -16).isActive = true
         
         self.bodyLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
         self.bodyLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true

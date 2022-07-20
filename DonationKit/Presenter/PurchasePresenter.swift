@@ -16,7 +16,7 @@ public class PurchasePresenter {
     private var purchaseStore: PurchaseService?
     private let analytics: AbstractAnalytics?
     
-    public var config = PurchaseConfigurable()
+    public var config = PurchaseConfiguration()
     var prices: [String] = []
     var titles: [String] = []
     var subscriptionPeriods: [String] = []
@@ -36,7 +36,7 @@ public class PurchasePresenter {
     
     public init(analytics: AbstractAnalytics? = nil,
                 purchaseProductIdentifiers: [ProductIdentifier],
-                config: PurchaseConfigurable? = nil) {
+                config: PurchaseConfiguration? = nil) {
         self.analytics = analytics
         self.purchaseStore = PurchaseService(productIds: Set(purchaseProductIdentifiers))
         
