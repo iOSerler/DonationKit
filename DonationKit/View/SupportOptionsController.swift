@@ -131,8 +131,8 @@ public class DonateOptionController: UIViewController {
         self.subscribeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         self.subscribeButton.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -24).isActive = true
         
-        self.alternativesLabel.leadingAnchor.constraint(equalTo: self.cardView.leadingAnchor, constant: 16).isActive = true
-        self.alternativesLabel.trailingAnchor.constraint(equalTo: self.cardView.trailingAnchor, constant: 16).isActive = true
+        self.alternativesLabel.leadingAnchor.constraint(equalTo: self.cardView.leadingAnchor, constant: 4).isActive = true
+        self.alternativesLabel.trailingAnchor.constraint(equalTo: self.cardView.trailingAnchor, constant: -4).isActive = true
         self.alternativesLabel.bottomAnchor.constraint(equalTo: donateOnceButton.topAnchor, constant: -8).isActive = true
         
         self.donateOnceButton.widthAnchor.constraint(equalTo: cardView.widthAnchor, constant: 0).isActive = true
