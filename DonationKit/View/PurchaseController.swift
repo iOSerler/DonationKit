@@ -102,7 +102,7 @@ public class PurchaseController: UIViewController {
         button.setTitle(purchasePresenter.config.secondaryButtonTitle, for: UIControl.State())
         
         if purchasePresenter.config.secondaryButtonFontName.isEmpty {
-            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.secondaryButtonFontSize, weight: .semibold)
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.secondaryButtonFontSize, weight: .medium)
         } else {
             button.titleLabel?.font = UIFont(name: purchasePresenter.config.secondaryButtonFontName, size: purchasePresenter.config.secondaryButtonFontSize)
         }
@@ -243,8 +243,8 @@ extension PurchaseController: UICollectionViewDelegate, UICollectionViewDataSour
         
         if purchasePresenter.config.type == "Recurring" {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecurringDonationCell", for: indexPath) as! RecurringDonationCell
-            cell.titleLabel.text = purchasePresenter.titles[indexPath.item]
-            cell.bodyLabel.text = purchasePresenter.prices[indexPath.item] + "/" + purchasePresenter.subscriptionPeriods[indexPath.item]
+            cell.titleLabel.text = purchasePresenter.prices[indexPath.item] + "/" + purchasePresenter.subscriptionPeriods[indexPath.item]
+            cell.bodyLabel.text = purchasePresenter.titles[indexPath.item]
             cell.iconImageView.image = UIImage(named: purchasePresenter.titles[indexPath.item])
             cell.titleLabel.textColor = UIColor(rgb: purchasePresenter.config.bodyLabelHexColor)
             cell.bodyLabel.textColor = UIColor(rgb: purchasePresenter.config.bodyLabelHexColor)

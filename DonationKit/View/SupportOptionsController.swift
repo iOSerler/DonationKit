@@ -111,9 +111,9 @@ public class DonateOptionController: UIViewController {
         self.view.addSubview(donateOnceButton)
 
         if #available(iOS 11.0, *) {
-            self.cardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+            self.cardView.topAnchor.constraint(greaterThanOrEqualTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
         } else {
-            self.cardView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
+            self.cardView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 8).isActive = true
         }
         
         self.cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -140,9 +140,9 @@ public class DonateOptionController: UIViewController {
         self.donateOnceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
         if #available(iOS 11.0, *) {
-            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24).isActive = true
+            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
         } else {
-            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
+            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24).isActive = true
         }
     }
     

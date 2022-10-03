@@ -91,7 +91,7 @@ public struct PurchaseConfiguration: StatementConfigurable {
         secondaryButtonFontName: String =  "",
         secondaryButtonFontSize: CGFloat = 17,
         secondaryButtonTitleHexColor: Int = 0x000000,
-        secondaryButtonBackgroundHexColor: Int = 0x0000FFFF,
+        secondaryButtonBackgroundHexColor: Int = 0x00FFFFFF,
         
         successImageName: String = "",
         isSuccessImagePulsating: Bool = true,
