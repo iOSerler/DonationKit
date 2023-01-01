@@ -7,9 +7,10 @@
 
 import UIKit
 import StoreKit
+import SwiftConfettiView
 
 public class SuccessController: UIViewController {
-        
+    
     private let purchasePresenter: PurchasePresenter
     
     private var wasNavigationBarHidden: Bool = false
@@ -23,35 +24,35 @@ public class SuccessController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var successImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = purchasePresenter.config.successImage
-        return imageView
+    private lazy var statementView: StatementView = {
+        let view = StatementView(config: purchasePresenter.config)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
-    private lazy var successLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
-        
-        label.text = purchasePresenter.config.successLabelText
-        label.font = purchasePresenter.config.statementLabelFont
-        label.textColor = purchasePresenter.config.statementLabelColor
-        
-        label.textAlignment = NSTextAlignment.center
-        label.adjustsFontSizeToFitWidth = true
-        return label
+    private lazy var confettiView: SwiftConfettiView = {
+        let view = SwiftConfettiView(frame: self.view.bounds)
+        view.intensity = 1
+        return view
     }()
     
     private lazy var proceedButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(purchasePresenter.config.successButtonTitle, for: UIControl.State())
-        button.titleLabel?.font = purchasePresenter.config.purchaseButtonFont
-        button.setTitleColor(purchasePresenter.config.purchaseButtonTitleColor, for: .normal)
-        button.backgroundColor = purchasePresenter.config.purchaseButtonBackgroundColor
+        
+        if purchasePresenter.config.primaryButtonFontName.isEmpty {
+            button.titleLabel?.font = UIFont.systemFont(ofSize: purchasePresenter.config.primaryButtonFontSize, weight: .semibold)
+        } else {
+            button.titleLabel?.font = UIFont(name: purchasePresenter.config.primaryButtonFontName, size: purchasePresenter.config.primaryButtonFontSize)
+        }
+        
+        button.setTitleColor(UIColor(rgb: purchasePresenter.config.primaryButtonTitleHexColor), for: .normal)
+        
+        
+        button.backgroundColor = UIColor(rgb: purchasePresenter.config.primaryButtonBackgroundHexColor)
+        
+        
         button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(proceedButtonPressed), for: .touchUpInside)
         
@@ -77,54 +78,38 @@ public class SuccessController: UIViewController {
     
     private func setupViews() {
         
-        self.view.backgroundColor = UIColor(red: 0xF4, green: 0xF4, blue: 0xF4, alpha: 1)
-        self.title = purchasePresenter.config.title
-        self.view.backgroundColor = purchasePresenter.config.backgroundColor
-        self.view.addSubview(successImageView)
-        self.view.addSubview(successLabel)
+        self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
+        self.view.addSubview(statementView)
+        self.view.addSubview(confettiView)
         self.view.addSubview(proceedButton)
         
+        statementView.setImage(purchasePresenter.config.successImageName)
+        statementView.setTitleText(purchasePresenter.config.successTitleText)
+        statementView.setBodyText(purchasePresenter.config.successBodyText)
+        
         if #available(iOS 11.0, *) {
-            self.successImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
-            self.successImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-            self.successImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-            self.successImageView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.30).isActive = true
-                    
-            self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
-            self.successLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
-            self.successLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16).isActive = true
-            self.successLabel.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.20).isActive = true
-            
-            self.proceedButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -110).isActive = true
-            self.proceedButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.proceedButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.proceedButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 0).isActive = true
+            self.statementView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+            self.proceedButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24).isActive = true
         } else {
-            self.successImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 30).isActive = true
-            self.successImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-            self.successImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-            self.successImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.30).isActive = true
-                    
-            self.successLabel.topAnchor.constraint(equalTo: successImageView.bottomAnchor, constant: 16).isActive = true
-            self.successLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-            self.successLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-            self.successLabel.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.20).isActive = true
-            
-            self.proceedButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
-            self.proceedButton.widthAnchor.constraint(equalToConstant: 250).isActive = true
-            self.proceedButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            self.proceedButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
+            self.statementView.topAnchor.constraint(equalTo: view.topAnchor, constant: 8).isActive = true
+            self.proceedButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
         }
         
+        self.statementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        self.statementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+        self.statementView.bottomAnchor.constraint(equalTo: proceedButton.topAnchor, constant: -8).isActive = true
+        
+        self.proceedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        self.proceedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        self.proceedButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         if purchasePresenter.config.isSuccessImagePulsating {
-            let scaleAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
-            scaleAnimation.duration = 1.0
-            scaleAnimation.repeatCount = 1.0
-            scaleAnimation.autoreverses = true
-            scaleAnimation.fromValue = 1.0;
-            scaleAnimation.toValue = 1.10;
-            self.successImageView.layer.add(scaleAnimation, forKey: "scale")
+            self.statementView.pulsateImage()
+            self.confettiView.startConfetti()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                self.confettiView.stopConfetti()
+            }
         }
     }
     

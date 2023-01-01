@@ -1,5 +1,4 @@
 import Foundation
-//import StoreKit
 
 public class PurchaseBuilder {
     public let view: PurchaseViewDelegate
@@ -7,7 +6,7 @@ public class PurchaseBuilder {
     
     public init(analytics: AbstractAnalytics?,
                 purchaseProductIdentifiers: [ProductIdentifier],
-                config: PurchaseConfigurable?) {
+                config: PurchaseConfiguration?) {
         
         self.presenter = PurchasePresenter(
             analytics: analytics,

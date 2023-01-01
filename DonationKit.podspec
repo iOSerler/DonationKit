@@ -20,4 +20,6 @@ Pod::Spec.new do |spec|
     'DonationKit/**/*.{swift,h,m,json}'
   ]
 
+  spec.dependency 'SwiftConfettiView'
+
 end
