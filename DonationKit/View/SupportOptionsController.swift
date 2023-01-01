@@ -119,7 +119,7 @@ public class DonateOptionController: UIViewController {
         self.cardView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         self.cardView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         self.cardView.heightAnchor.constraint(equalTo: cardView.widthAnchor, constant: 0).isActive = true
-        self.cardView.bottomAnchor.constraint(equalTo: alternativesLabel.topAnchor, constant: -32).isActive = true
+        self.cardView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
         
         self.statementView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 16).isActive = true
         self.statementView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 0).isActive = true
@@ -131,6 +131,7 @@ public class DonateOptionController: UIViewController {
         self.subscribeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
         self.subscribeButton.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -24).isActive = true
         
+        self.alternativesLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 32).isActive = true
         self.alternativesLabel.leadingAnchor.constraint(equalTo: self.cardView.leadingAnchor, constant: 4).isActive = true
         self.alternativesLabel.trailingAnchor.constraint(equalTo: self.cardView.trailingAnchor, constant: -4).isActive = true
         self.alternativesLabel.bottomAnchor.constraint(equalTo: donateOnceButton.topAnchor, constant: -8).isActive = true
@@ -140,9 +141,9 @@ public class DonateOptionController: UIViewController {
         self.donateOnceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         
         if #available(iOS 11.0, *) {
-            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
+            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
         } else {
-            self.donateOnceButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24).isActive = true
+            self.donateOnceButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -24).isActive = true
         }
     }
     
