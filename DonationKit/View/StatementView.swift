@@ -88,7 +88,7 @@ class StatementView: UIView {
         self.imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
         self.imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         self.imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
-        self.imageView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.25).isActive = true
+        self.imageView.heightAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.35).isActive = true
         
         self.titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 16).isActive = true
         self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true

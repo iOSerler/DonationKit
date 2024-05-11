@@ -137,10 +137,10 @@ public class PurchasePresenter {
             return
         }
         
-        self.analytics?.logEvent("Purchase Attempt", properties: [
-            "price": product.price,
-            "configuration": config.configID
-        ])
+//        self.analytics?.logEvent("Purchase Attempt", properties: [
+//            "price": product.price,
+//            "configuration": config.configID
+//        ])
         
         self.isProcessingRequest = true
         purchaseStore?.buyProduct(product)
@@ -148,9 +148,9 @@ public class PurchasePresenter {
     
     func doSuccessAction() {
         
-        analytics?.logEvent("Success Action Performed", properties: [
-            "configID" : config.configID])
-        
+//        analytics?.logEvent("Success Action Performed", properties: [
+//            "configID" : config.configID])
+//        
         if let _ = config.successAction {
             config.successAction?()
         } else {
@@ -161,8 +161,8 @@ public class PurchasePresenter {
     
     func doSecondaryAction() {
         
-        analytics?.logEvent("Secondary Action Performed", properties: [
-            "configID" : config.configID])
+//        analytics?.logEvent("Secondary Action Performed", properties: [
+//            "configID" : config.configID])
         
         if let _ = config.secondaryAction {
             config.secondaryAction?()
@@ -175,10 +175,10 @@ public class PurchasePresenter {
         
         self.viewDelegate?.stopLoadingAnimation()
         self.isProcessingRequest = false
-        self.analytics?.logEvent("Purchase Made", properties: [
-            "price": productChosen!.price,
-            "configuration": config.configID
-        ])
+//        self.analytics?.logEvent("Purchase Made", properties: [
+//            "price": productChosen!.price,
+//            "configuration": config.configID
+//        ])
         
         PurchaseStorage.savePurchase(config.purchaseIdForHistory)
         viewDelegate?.showSuccessController()

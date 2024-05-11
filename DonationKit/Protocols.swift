@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol AbstractAnalytics {
-    func logEvent(_ eventName: String, properties: [String:Any]?)
+    func logActivity(_ activityId: String, type: String, value: Double?, startDate: Date)
     func setUserProperty(_ property: String, value: Any)
 }
 
