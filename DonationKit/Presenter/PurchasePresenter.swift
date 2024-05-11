@@ -15,6 +15,7 @@ public class PurchasePresenter {
     
     private var purchaseStore: PurchaseService?
     private let analytics: AbstractAnalytics?
+    private let storage: PurchaseStorage
     
     public var config = PurchaseConfiguration()
     var prices: [String] = []
@@ -36,9 +37,11 @@ public class PurchasePresenter {
     
     public init(analytics: AbstractAnalytics? = nil,
                 purchaseProductIdentifiers: [ProductIdentifier],
-                config: PurchaseConfiguration? = nil) {
+                config: PurchaseConfiguration? = nil,
+                storage: PurchaseStorage) {
         self.analytics = analytics
-        self.purchaseStore = PurchaseService(productIds: Set(purchaseProductIdentifiers))
+        self.purchaseStore = PurchaseService(productIds: Set(purchaseProductIdentifiers), storage: storage)
+        self.storage = storage
         
         if let config = config {
             self.config = config
@@ -180,7 +183,7 @@ public class PurchasePresenter {
 //            "configuration": config.configID
 //        ])
         
-        PurchaseStorage.savePurchase(config.purchaseIdForHistory)
+        storage.store(true, forKey: config.purchaseIdForHistory ?? "didSupportApp")
         viewDelegate?.showSuccessController()
     }
     

@@ -14,15 +14,18 @@ internal class PurchaseService : NSObject  {
     
     static let IAPHelperPurchaseNotification = "IAPHelperPurchaseNotification"
     static let IAPHelperFailureNotification = "IAPHelperFailureNotification"
-    fileprivate let productIdentifiers: Set<ProductIdentifier>
-    fileprivate var purchasedProductIdentifiers = Set<ProductIdentifier>()
-    fileprivate var productsRequest: SKProductsRequest?
-    fileprivate var productsRequestCompletionHandler: ProductsRequestCompletionHandler?
+    private let productIdentifiers: Set<ProductIdentifier>
+    private let storage: PurchaseStorage
     
-    init(productIds: Set<ProductIdentifier>) {
-        productIdentifiers = productIds
+    private var purchasedProductIdentifiers = Set<ProductIdentifier>()
+    private var productsRequest: SKProductsRequest?
+    private var productsRequestCompletionHandler: ProductsRequestCompletionHandler?
+    
+    init(productIds: Set<ProductIdentifier>, storage: PurchaseStorage) {
+        self.productIdentifiers = productIds
+        self.storage = storage
         for productIdentifier in productIds {
-            let purchased = UserDefaults.standard.bool(forKey: productIdentifier)
+            let purchased = storage.retrieve(forKey: productIdentifier) as? Bool ?? false
             if purchased {
                 purchasedProductIdentifiers.insert(productIdentifier)
             }
@@ -150,8 +153,7 @@ extension PurchaseService: SKPaymentTransactionObserver {
         guard let identifier = identifier else { return }
         
         purchasedProductIdentifiers.insert(identifier)
-        UserDefaults.standard.set(true, forKey: identifier)
-        UserDefaults.standard.synchronize()
+        storage.store(true, forKey: identifier)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: PurchaseService.IAPHelperPurchaseNotification), object: identifier)
     }
     

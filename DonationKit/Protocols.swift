@@ -8,6 +8,11 @@
 
 import Foundation
 
+public protocol PurchaseStorage {
+    func store(_ anyObject: Any, forKey key: String)
+    func retrieve(forKey key: String) -> Any?
+}
+
 public protocol AbstractAnalytics {
     func logActivity(_ activityId: String, type: String, value: Double?, startDate: Date)
     func setUserProperty(_ property: String, value: Any)
