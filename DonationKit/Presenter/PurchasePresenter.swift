@@ -9,12 +9,20 @@
 import Foundation
 import StoreKit
 
+public protocol DonationAnalyticsDelegate: AnyObject {
+    func purchaseSuccess(lessonID: String?)
+    func secondaryButtonPressed(lessonID: String?)
+    func purchaseFail()
+    func buyPurchasePressed(price: Int)
+    func closePurchasePressed()
+    func priceListShown()
+}
+
 public class PurchasePresenter {
     
     weak private var viewDelegate: PurchaseViewDelegate?
     
     private var purchaseStore: PurchaseService?
-    private let analytics: AbstractAnalytics?
     private let storage: PurchaseStorage
     
     public var config = PurchaseConfiguration()
@@ -25,7 +33,8 @@ public class PurchasePresenter {
     private var products = [SKProduct]()
     private var productChosen: SKProduct?
     private var isProcessingRequest = true
-    
+    private weak var analytics: DonationAnalyticsDelegate?
+
     var chosenProductIndex: Int {
         guard let productChosen = productChosen,
             let index = products.firstIndex(of: productChosen) else {
@@ -35,11 +44,11 @@ public class PurchasePresenter {
         return index
     }
     
-    public init(analytics: AbstractAnalytics? = nil,
-                purchaseProductIdentifiers: [ProductIdentifier],
+    public init(purchaseProductIdentifiers: [ProductIdentifier],
                 config: PurchaseConfiguration? = nil,
-                storage: PurchaseStorage) {
-        self.analytics = analytics
+                storage: PurchaseStorage,
+                analyticsDelegate: DonationAnalyticsDelegate?) {
+        self.analytics = analyticsDelegate
         self.purchaseStore = PurchaseService(productIds: Set(purchaseProductIdentifiers), storage: storage)
         self.storage = storage
         
@@ -139,21 +148,17 @@ public class PurchasePresenter {
             self.viewDelegate?.pop()
             return
         }
-        
-//        self.analytics?.logEvent("Purchase Attempt", properties: [
-//            "price": product.price,
-//            "configuration": config.configID
-//        ])
-        
+
+        analytics?.buyPurchasePressed(price: product.price.intValue)
+
         self.isProcessingRequest = true
         purchaseStore?.buyProduct(product)
     }
     
     func doSuccessAction() {
-        
-//        analytics?.logEvent("Success Action Performed", properties: [
-//            "configID" : config.configID])
-//        
+
+        analytics?.purchaseSuccess(lessonID: config.lessonId)
+
         if let _ = config.successAction {
             config.successAction?()
         } else {
@@ -161,12 +166,23 @@ public class PurchasePresenter {
             viewDelegate?.pop()
         }
     }
-    
+
+    func doFailureAction() {
+        analytics?.purchaseFail()
+    }
+
+    func didReloadPriceList() {
+        analytics?.priceListShown()
+    }
+
+    func didTapBack() {
+        analytics?.closePurchasePressed()
+    }
+
     func doSecondaryAction() {
-        
-//        analytics?.logEvent("Secondary Action Performed", properties: [
-//            "configID" : config.configID])
-        
+
+        analytics?.secondaryButtonPressed(lessonID: config.lessonId)
+
         if let _ = config.secondaryAction {
             config.secondaryAction?()
         } else {
@@ -178,10 +194,6 @@ public class PurchasePresenter {
         
         self.viewDelegate?.stopLoadingAnimation()
         self.isProcessingRequest = false
-//        self.analytics?.logEvent("Purchase Made", properties: [
-//            "price": productChosen!.price,
-//            "configuration": config.configID
-//        ])
         
         storage.store(true, forKey: config.purchaseIdForHistory ?? "didSupportApp")
         viewDelegate?.showSuccessController()

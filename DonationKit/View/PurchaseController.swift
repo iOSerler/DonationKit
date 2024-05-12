@@ -123,7 +123,15 @@ public class PurchaseController: UIViewController {
         setupViews()
         
     }
-    
+
+    public override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+
+        if parent == nil {
+            purchasePresenter.didTapBack()
+        }
+    }
+
     private func setupViews() {
         
         self.view.backgroundColor = UIColor(rgb: purchasePresenter.config.backgroundHexColor)
@@ -178,7 +186,7 @@ public class PurchaseController: UIViewController {
         } else {
             self.secondaryButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -16).isActive = true
         }
-        
+
     }
     
     @objc private func purchaseButtonPressed(_ sender: AnyObject) {
@@ -206,9 +214,11 @@ extension PurchaseController: PurchaseViewDelegate {
         self.pricePickerView.reloadAllComponents()
         self.purchaseButton.isHidden = false
         self.secondaryButton.isHidden = self.purchasePresenter.config.isSecondaryButtonHidden
+        purchasePresenter.didReloadPriceList()
     }
     
     public func showFailureViews() {
+        purchasePresenter.doFailureAction()
         UIView.animate(withDuration: 0.2, animations: {
             self.purchaseButton.alpha = 0
             self.statementView.alpha = 0

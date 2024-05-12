@@ -5,16 +5,16 @@ public class PurchaseBuilder {
     public let presenter: PurchasePresenter
     
     
-    public init(analytics: AbstractAnalytics?,
-                purchaseProductIdentifiers: [ProductIdentifier],
+    public init(purchaseProductIdentifiers: [ProductIdentifier],
                 config: PurchaseConfiguration?,
-                storage: PurchaseStorage) {
-        
+                storage: PurchaseStorage,
+                analyticsDelegate: DonationAnalyticsDelegate?) {
+
         self.presenter = PurchasePresenter(
-            analytics: analytics,
             purchaseProductIdentifiers: purchaseProductIdentifiers,
             config: config,
-            storage: storage
+            storage: storage,
+            analyticsDelegate: analyticsDelegate
         )
         
         self.view = PurchaseController(presenter: presenter)
