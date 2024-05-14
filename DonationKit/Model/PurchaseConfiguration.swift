@@ -13,7 +13,8 @@ public struct PurchaseConfiguration: StatementConfigurable {
     let type: String
     let title: String
     let backgroundHexColor: Int
-    
+    let lessonId: String?
+
     /// Statement
     let imageName: String
     
@@ -67,7 +68,8 @@ public struct PurchaseConfiguration: StatementConfigurable {
         type: String = "OneTime",
         title: String = "Donation",
         backgroundHexColor: Int = 0xFFFFFF,
-        
+        lessonID: String? = nil,
+
         imageName: String = "online-money",
         
         titleLabelText: String =  "Become a supporter.",
@@ -110,6 +112,7 @@ public struct PurchaseConfiguration: StatementConfigurable {
         self.configID = configID
         self.type = type
         self.title = title
+        self.lessonId = lessonID
         self.backgroundHexColor = backgroundHexColor
         
         self.imageName = imageName
