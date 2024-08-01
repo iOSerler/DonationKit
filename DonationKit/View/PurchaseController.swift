@@ -214,7 +214,6 @@ extension PurchaseController: PurchaseViewDelegate {
         self.pricePickerView.reloadAllComponents()
         self.purchaseButton.isHidden = false
         self.secondaryButton.isHidden = self.purchasePresenter.config.isSecondaryButtonHidden
-        purchasePresenter.didReloadPriceList()
     }
     
     public func showFailureViews() {

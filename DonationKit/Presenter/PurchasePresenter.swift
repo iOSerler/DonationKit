@@ -10,12 +10,10 @@ import Foundation
 import StoreKit
 
 public protocol DonationAnalyticsDelegate: AnyObject {
-    func purchaseSuccess(lessonID: String?)
-    func secondaryButtonPressed(lessonID: String?)
+    func purchaseSuccess()
     func purchaseFail()
     func buyPurchasePressed(price: Int)
     func closePurchasePressed()
-    func priceListShown()
 }
 
 public class PurchasePresenter {
@@ -157,7 +155,7 @@ public class PurchasePresenter {
     
     func doSuccessAction() {
 
-        analytics?.purchaseSuccess(lessonID: config.lessonId)
+        analytics?.purchaseSuccess()
 
         if let _ = config.successAction {
             config.successAction?()
@@ -171,17 +169,11 @@ public class PurchasePresenter {
         analytics?.purchaseFail()
     }
 
-    func didReloadPriceList() {
-        analytics?.priceListShown()
-    }
-
     func didTapBack() {
         analytics?.closePurchasePressed()
     }
 
     func doSecondaryAction() {
-
-        analytics?.secondaryButtonPressed(lessonID: config.lessonId)
 
         if let _ = config.secondaryAction {
             config.secondaryAction?()
